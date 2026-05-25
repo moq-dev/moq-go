@@ -382,6 +382,51 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqaudioconsumer_cancel()
+		})
+		if checksum != 33004 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqaudioconsumer_cancel: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqaudioconsumer_next()
+		})
+		if checksum != 55387 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqaudioconsumer_next: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqaudioproducer_finish()
+		})
+		if checksum != 41749 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqaudioproducer_finish: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqaudioproducer_write()
+		})
+		if checksum != 49517 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqaudioproducer_write: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_audio()
+		})
+		if checksum != 16924 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_audio: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_catalog()
 		})
 		if checksum != 28366 {
@@ -594,6 +639,15 @@ func uniffiCheckChecksums() {
 		if checksum != 24937 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqoriginproducer_publish: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_audio()
+		})
+		if checksum != 39786 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_audio: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -1657,7 +1711,221 @@ func (_ FfiDestroyerMoqAnnouncement) Destroy(value *MoqAnnouncement) {
 	value.Destroy()
 }
 
+// Consumer for a raw-audio track.
+type MoqAudioConsumerInterface interface {
+	Cancel()
+	Next() (*MoqAudioFrame, error)
+}
+
+// Consumer for a raw-audio track.
+type MoqAudioConsumer struct {
+	ffiObject FfiObject
+}
+
+func (_self *MoqAudioConsumer) Cancel() {
+	_pointer := _self.ffiObject.incrementPointer("*MoqAudioConsumer")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqaudioconsumer_cancel(
+			_pointer, _uniffiStatus)
+		return false
+	})
+}
+
+func (_self *MoqAudioConsumer) Next() (*MoqAudioFrame, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqAudioConsumer")
+	defer _self.ffiObject.decrementPointer()
+	res, err := uniffiRustCallAsync[*MoqError](
+		FfiConverterMoqErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_moq_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer{
+				inner: res,
+			}
+		},
+		// liftFn
+		func(ffi RustBufferI) *MoqAudioFrame {
+			return FfiConverterOptionalMoqAudioFrameINSTANCE.Lift(ffi)
+		},
+		C.uniffi_moq_ffi_fn_method_moqaudioconsumer_next(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	if err == nil {
+		return res, nil
+	}
+
+	return res, err
+}
+func (object *MoqAudioConsumer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqAudioConsumer struct{}
+
+var FfiConverterMoqAudioConsumerINSTANCE = FfiConverterMoqAudioConsumer{}
+
+func (c FfiConverterMoqAudioConsumer) Lift(handle C.uint64_t) *MoqAudioConsumer {
+	result := &MoqAudioConsumer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqaudioconsumer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqaudioconsumer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqAudioConsumer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqAudioConsumer) Read(reader io.Reader) *MoqAudioConsumer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqAudioConsumer) Lower(value *MoqAudioConsumer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqAudioConsumer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqAudioConsumer) Write(writer io.Writer, value *MoqAudioConsumer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqAudioConsumer(handle uint64) *MoqAudioConsumer {
+	return FfiConverterMoqAudioConsumerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqAudioConsumer(value *MoqAudioConsumer) uint64 {
+	return uint64(FfiConverterMoqAudioConsumerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqAudioConsumer struct{}
+
+func (_ FfiDestroyerMoqAudioConsumer) Destroy(value *MoqAudioConsumer) {
+	value.Destroy()
+}
+
+// Producer for a raw-audio track.
+//
+// Built via [`MoqBroadcastProducer::publish_audio`]. Each
+// [`write`](Self::write) accepts an [`MoqAudioFrame`] whose `data`
+// is PCM in the format declared by the [`MoqAudioEncoderInput`]
+// passed at publish time.
+type MoqAudioProducerInterface interface {
+	Finish() error
+	Write(frame MoqAudioFrame) error
+}
+
+// Producer for a raw-audio track.
+//
+// Built via [`MoqBroadcastProducer::publish_audio`]. Each
+// [`write`](Self::write) accepts an [`MoqAudioFrame`] whose `data`
+// is PCM in the format declared by the [`MoqAudioEncoderInput`]
+// passed at publish time.
+type MoqAudioProducer struct {
+	ffiObject FfiObject
+}
+
+func (_self *MoqAudioProducer) Finish() error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqAudioProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqaudioproducer_finish(
+			_pointer, _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+
+func (_self *MoqAudioProducer) Write(frame MoqAudioFrame) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqAudioProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqaudioproducer_write(
+			_pointer, FfiConverterMoqAudioFrameINSTANCE.Lower(frame), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+func (object *MoqAudioProducer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqAudioProducer struct{}
+
+var FfiConverterMoqAudioProducerINSTANCE = FfiConverterMoqAudioProducer{}
+
+func (c FfiConverterMoqAudioProducer) Lift(handle C.uint64_t) *MoqAudioProducer {
+	result := &MoqAudioProducer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqaudioproducer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqaudioproducer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqAudioProducer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqAudioProducer) Read(reader io.Reader) *MoqAudioProducer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqAudioProducer) Lower(value *MoqAudioProducer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqAudioProducer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqAudioProducer) Write(writer io.Writer, value *MoqAudioProducer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqAudioProducer(handle uint64) *MoqAudioProducer {
+	return FfiConverterMoqAudioProducerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqAudioProducer(value *MoqAudioProducer) uint64 {
+	return uint64(FfiConverterMoqAudioProducerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqAudioProducer struct{}
+
+func (_ FfiDestroyerMoqAudioProducer) Destroy(value *MoqAudioProducer) {
+	value.Destroy()
+}
+
 type MoqBroadcastConsumerInterface interface {
+	// Subscribe to an audio track. `catalog_audio_config` comes from
+	// the catalog (see
+	// [`MoqCatalogConsumer::next`](crate::consumer::MoqCatalogConsumer::next));
+	// the codec is inferred from it.
+	SubscribeAudio(name string, catalogAudio MoqAudio, output MoqAudioDecoderOutput) (*MoqAudioConsumer, error)
 	// Subscribe to the catalog for this broadcast.
 	SubscribeCatalog() (*MoqCatalogConsumer, error)
 	// Subscribe to a track by name, delivering frames in decode order.
@@ -1672,6 +1940,25 @@ type MoqBroadcastConsumerInterface interface {
 }
 type MoqBroadcastConsumer struct {
 	ffiObject FfiObject
+}
+
+// Subscribe to an audio track. `catalog_audio_config` comes from
+// the catalog (see
+// [`MoqCatalogConsumer::next`](crate::consumer::MoqCatalogConsumer::next));
+// the codec is inferred from it.
+func (_self *MoqBroadcastConsumer) SubscribeAudio(name string, catalogAudio MoqAudio, output MoqAudioDecoderOutput) (*MoqAudioConsumer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastConsumer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastconsumer_subscribe_audio(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqAudioINSTANCE.Lower(catalogAudio), FfiConverterMoqAudioDecoderOutputINSTANCE.Lower(output), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqAudioConsumer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqAudioConsumerINSTANCE.Lift(_uniffiRV), nil
+	}
 }
 
 // Subscribe to the catalog for this broadcast.
@@ -1783,6 +2070,10 @@ func (_ FfiDestroyerMoqBroadcastConsumer) Destroy(value *MoqBroadcastConsumer) {
 }
 
 type MoqBroadcastProducerInterface interface {
+	// Open an audio track on this broadcast. The catalog rendition is
+	// registered immediately so subscribers can find the track even
+	// before the first frame is written.
+	PublishAudio(name string, input MoqAudioEncoderInput, output MoqAudioEncoderOutput) (*MoqAudioProducer, error)
 	// Create a consumer that reads from this broadcast's tracks.
 	Consume() (*MoqBroadcastConsumer, error)
 	// Finish this publisher, finalizing the catalog stream.
@@ -1813,6 +2104,24 @@ func NewMoqBroadcastProducer() (*MoqBroadcastProducer, error) {
 		return _uniffiDefaultValue, _uniffiErr
 	} else {
 		return FfiConverterMoqBroadcastProducerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Open an audio track on this broadcast. The catalog rendition is
+// registered immediately so subscribers can find the track even
+// before the first frame is written.
+func (_self *MoqBroadcastProducer) PublishAudio(name string, input MoqAudioEncoderInput, output MoqAudioEncoderOutput) (*MoqAudioProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_audio(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqAudioEncoderInputINSTANCE.Lower(input), FfiConverterMoqAudioEncoderOutputINSTANCE.Lower(output), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqAudioProducer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqAudioProducerINSTANCE.Lift(_uniffiRV), nil
 	}
 }
 
@@ -4032,6 +4341,228 @@ func (_ FfiDestroyerMoqAudio) Destroy(value MoqAudio) {
 	value.Destroy()
 }
 
+// PCM layout the caller wants out of [`MoqAudioConsumer::next`].
+type MoqAudioDecoderOutput struct {
+	Format MoqAudioFormat
+	// `None` delivers samples at the codec's native rate.
+	SampleRate *uint32
+	// `None` delivers samples at the codec's native channel count.
+	Channels *uint32
+	// Upper bound on buffering before skipping a stalled group, in
+	// milliseconds. Same congestion-control knob as
+	// [`MoqBroadcastConsumer::subscribe_media`](crate::consumer::MoqBroadcastConsumer::subscribe_media)'s
+	// `max_latency_ms`: when a group stalls and a newer group is more
+	// than this far ahead, the consumer skips. `None` keeps the
+	// moq-mux default of zero (skip aggressively). Named `_max` to
+	// leave room for a future `latency_min_ms` (jitter buffer).
+	LatencyMaxMs *uint64
+}
+
+func (r *MoqAudioDecoderOutput) Destroy() {
+	FfiDestroyerMoqAudioFormat{}.Destroy(r.Format)
+	FfiDestroyerOptionalUint32{}.Destroy(r.SampleRate)
+	FfiDestroyerOptionalUint32{}.Destroy(r.Channels)
+	FfiDestroyerOptionalUint64{}.Destroy(r.LatencyMaxMs)
+}
+
+type FfiConverterMoqAudioDecoderOutput struct{}
+
+var FfiConverterMoqAudioDecoderOutputINSTANCE = FfiConverterMoqAudioDecoderOutput{}
+
+func (c FfiConverterMoqAudioDecoderOutput) Lift(rb RustBufferI) MoqAudioDecoderOutput {
+	return LiftFromRustBuffer[MoqAudioDecoderOutput](c, rb)
+}
+
+func (c FfiConverterMoqAudioDecoderOutput) Read(reader io.Reader) MoqAudioDecoderOutput {
+	return MoqAudioDecoderOutput{
+		FfiConverterMoqAudioFormatINSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterOptionalUint64INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqAudioDecoderOutput) Lower(value MoqAudioDecoderOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioDecoderOutput](c, value)
+}
+
+func (c FfiConverterMoqAudioDecoderOutput) LowerExternal(value MoqAudioDecoderOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioDecoderOutput](c, value))
+}
+
+func (c FfiConverterMoqAudioDecoderOutput) Write(writer io.Writer, value MoqAudioDecoderOutput) {
+	FfiConverterMoqAudioFormatINSTANCE.Write(writer, value.Format)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.SampleRate)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.Channels)
+	FfiConverterOptionalUint64INSTANCE.Write(writer, value.LatencyMaxMs)
+}
+
+type FfiDestroyerMoqAudioDecoderOutput struct{}
+
+func (_ FfiDestroyerMoqAudioDecoderOutput) Destroy(value MoqAudioDecoderOutput) {
+	value.Destroy()
+}
+
+// PCM layout the caller will pass to [`MoqAudioProducer::write`].
+type MoqAudioEncoderInput struct {
+	Format     MoqAudioFormat
+	SampleRate uint32
+	Channels   uint32
+}
+
+func (r *MoqAudioEncoderInput) Destroy() {
+	FfiDestroyerMoqAudioFormat{}.Destroy(r.Format)
+	FfiDestroyerUint32{}.Destroy(r.SampleRate)
+	FfiDestroyerUint32{}.Destroy(r.Channels)
+}
+
+type FfiConverterMoqAudioEncoderInput struct{}
+
+var FfiConverterMoqAudioEncoderInputINSTANCE = FfiConverterMoqAudioEncoderInput{}
+
+func (c FfiConverterMoqAudioEncoderInput) Lift(rb RustBufferI) MoqAudioEncoderInput {
+	return LiftFromRustBuffer[MoqAudioEncoderInput](c, rb)
+}
+
+func (c FfiConverterMoqAudioEncoderInput) Read(reader io.Reader) MoqAudioEncoderInput {
+	return MoqAudioEncoderInput{
+		FfiConverterMoqAudioFormatINSTANCE.Read(reader),
+		FfiConverterUint32INSTANCE.Read(reader),
+		FfiConverterUint32INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqAudioEncoderInput) Lower(value MoqAudioEncoderInput) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioEncoderInput](c, value)
+}
+
+func (c FfiConverterMoqAudioEncoderInput) LowerExternal(value MoqAudioEncoderInput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioEncoderInput](c, value))
+}
+
+func (c FfiConverterMoqAudioEncoderInput) Write(writer io.Writer, value MoqAudioEncoderInput) {
+	FfiConverterMoqAudioFormatINSTANCE.Write(writer, value.Format)
+	FfiConverterUint32INSTANCE.Write(writer, value.SampleRate)
+	FfiConverterUint32INSTANCE.Write(writer, value.Channels)
+}
+
+type FfiDestroyerMoqAudioEncoderInput struct{}
+
+func (_ FfiDestroyerMoqAudioEncoderInput) Destroy(value MoqAudioEncoderInput) {
+	value.Destroy()
+}
+
+// Codec-side configuration. `sample_rate` / `channels` `None` means
+// "match the input (snapping the rate up to a libopus-supported
+// value if necessary)".
+type MoqAudioEncoderOutput struct {
+	Codec      MoqAudioCodec
+	SampleRate *uint32
+	Channels   *uint32
+	Bitrate    *uint32
+	// Encoded frame duration in milliseconds. Opus accepts
+	// 2.5/5/10/20/40/60 ms; pass 20 to match the JS publish path.
+	FrameDurationMs uint32
+}
+
+func (r *MoqAudioEncoderOutput) Destroy() {
+	FfiDestroyerMoqAudioCodec{}.Destroy(r.Codec)
+	FfiDestroyerOptionalUint32{}.Destroy(r.SampleRate)
+	FfiDestroyerOptionalUint32{}.Destroy(r.Channels)
+	FfiDestroyerOptionalUint32{}.Destroy(r.Bitrate)
+	FfiDestroyerUint32{}.Destroy(r.FrameDurationMs)
+}
+
+type FfiConverterMoqAudioEncoderOutput struct{}
+
+var FfiConverterMoqAudioEncoderOutputINSTANCE = FfiConverterMoqAudioEncoderOutput{}
+
+func (c FfiConverterMoqAudioEncoderOutput) Lift(rb RustBufferI) MoqAudioEncoderOutput {
+	return LiftFromRustBuffer[MoqAudioEncoderOutput](c, rb)
+}
+
+func (c FfiConverterMoqAudioEncoderOutput) Read(reader io.Reader) MoqAudioEncoderOutput {
+	return MoqAudioEncoderOutput{
+		FfiConverterMoqAudioCodecINSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterUint32INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqAudioEncoderOutput) Lower(value MoqAudioEncoderOutput) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioEncoderOutput](c, value)
+}
+
+func (c FfiConverterMoqAudioEncoderOutput) LowerExternal(value MoqAudioEncoderOutput) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioEncoderOutput](c, value))
+}
+
+func (c FfiConverterMoqAudioEncoderOutput) Write(writer io.Writer, value MoqAudioEncoderOutput) {
+	FfiConverterMoqAudioCodecINSTANCE.Write(writer, value.Codec)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.SampleRate)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.Channels)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.Bitrate)
+	FfiConverterUint32INSTANCE.Write(writer, value.FrameDurationMs)
+}
+
+type FfiDestroyerMoqAudioEncoderOutput struct{}
+
+func (_ FfiDestroyerMoqAudioEncoderOutput) Destroy(value MoqAudioEncoderOutput) {
+	value.Destroy()
+}
+
+// One audio frame: payload bytes plus a presentation timestamp.
+//
+// PCM layout is fixed by the producer / consumer config, so it is
+// **not** carried per-frame. On the producer side `data` is raw PCM
+// in the configured `input_format`; on the consumer side it is raw
+// PCM in the configured `output_format`.
+type MoqAudioFrame struct {
+	TimestampUs uint64
+	Data        []byte
+}
+
+func (r *MoqAudioFrame) Destroy() {
+	FfiDestroyerUint64{}.Destroy(r.TimestampUs)
+	FfiDestroyerBytes{}.Destroy(r.Data)
+}
+
+type FfiConverterMoqAudioFrame struct{}
+
+var FfiConverterMoqAudioFrameINSTANCE = FfiConverterMoqAudioFrame{}
+
+func (c FfiConverterMoqAudioFrame) Lift(rb RustBufferI) MoqAudioFrame {
+	return LiftFromRustBuffer[MoqAudioFrame](c, rb)
+}
+
+func (c FfiConverterMoqAudioFrame) Read(reader io.Reader) MoqAudioFrame {
+	return MoqAudioFrame{
+		FfiConverterUint64INSTANCE.Read(reader),
+		FfiConverterBytesINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqAudioFrame) Lower(value MoqAudioFrame) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioFrame](c, value)
+}
+
+func (c FfiConverterMoqAudioFrame) LowerExternal(value MoqAudioFrame) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioFrame](c, value))
+}
+
+func (c FfiConverterMoqAudioFrame) Write(writer io.Writer, value MoqAudioFrame) {
+	FfiConverterUint64INSTANCE.Write(writer, value.TimestampUs)
+	FfiConverterBytesINSTANCE.Write(writer, value.Data)
+}
+
+type FfiDestroyerMoqAudioFrame struct{}
+
+func (_ FfiDestroyerMoqAudioFrame) Destroy(value MoqAudioFrame) {
+	value.Destroy()
+}
+
 type MoqCatalog struct {
 	Video    map[string]MoqVideo
 	Audio    map[string]MoqAudio
@@ -4320,6 +4851,87 @@ func (_ FfiDestroyerContainer) Destroy(value Container) {
 	value.Destroy()
 }
 
+// Audio codec identifier.
+type MoqAudioCodec uint
+
+const (
+	MoqAudioCodecOpus MoqAudioCodec = 1
+)
+
+type FfiConverterMoqAudioCodec struct{}
+
+var FfiConverterMoqAudioCodecINSTANCE = FfiConverterMoqAudioCodec{}
+
+func (c FfiConverterMoqAudioCodec) Lift(rb RustBufferI) MoqAudioCodec {
+	return LiftFromRustBuffer[MoqAudioCodec](c, rb)
+}
+
+func (c FfiConverterMoqAudioCodec) Lower(value MoqAudioCodec) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioCodec](c, value)
+}
+
+func (c FfiConverterMoqAudioCodec) LowerExternal(value MoqAudioCodec) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioCodec](c, value))
+}
+func (FfiConverterMoqAudioCodec) Read(reader io.Reader) MoqAudioCodec {
+	id := readInt32(reader)
+	return MoqAudioCodec(id)
+}
+
+func (FfiConverterMoqAudioCodec) Write(writer io.Writer, value MoqAudioCodec) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMoqAudioCodec struct{}
+
+func (_ FfiDestroyerMoqAudioCodec) Destroy(value MoqAudioCodec) {
+}
+
+// Raw PCM sample format, mirroring WebCodecs `AudioData.format`.
+//
+// <https://developer.mozilla.org/en-US/docs/Web/API/AudioData/format>
+type MoqAudioFormat uint
+
+const (
+	MoqAudioFormatU8        MoqAudioFormat = 1
+	MoqAudioFormatS16       MoqAudioFormat = 2
+	MoqAudioFormatS32       MoqAudioFormat = 3
+	MoqAudioFormatF32       MoqAudioFormat = 4
+	MoqAudioFormatU8Planar  MoqAudioFormat = 5
+	MoqAudioFormatS16Planar MoqAudioFormat = 6
+	MoqAudioFormatS32Planar MoqAudioFormat = 7
+	MoqAudioFormatF32Planar MoqAudioFormat = 8
+)
+
+type FfiConverterMoqAudioFormat struct{}
+
+var FfiConverterMoqAudioFormatINSTANCE = FfiConverterMoqAudioFormat{}
+
+func (c FfiConverterMoqAudioFormat) Lift(rb RustBufferI) MoqAudioFormat {
+	return LiftFromRustBuffer[MoqAudioFormat](c, rb)
+}
+
+func (c FfiConverterMoqAudioFormat) Lower(value MoqAudioFormat) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqAudioFormat](c, value)
+}
+
+func (c FfiConverterMoqAudioFormat) LowerExternal(value MoqAudioFormat) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqAudioFormat](c, value))
+}
+func (FfiConverterMoqAudioFormat) Read(reader io.Reader) MoqAudioFormat {
+	id := readInt32(reader)
+	return MoqAudioFormat(id)
+}
+
+func (FfiConverterMoqAudioFormat) Write(writer io.Writer, value MoqAudioFormat) {
+	writeInt32(writer, int32(value))
+}
+
+type FfiDestroyerMoqAudioFormat struct{}
+
+func (_ FfiDestroyerMoqAudioFormat) Destroy(value MoqAudioFormat) {
+}
+
 // Error returned by all UniFFI-exported functions.
 type MoqError struct {
 	err error
@@ -4347,6 +4959,7 @@ func (err MoqError) Unwrap() error {
 var ErrMoqErrorProtocol = fmt.Errorf("MoqErrorProtocol")
 var ErrMoqErrorMedia = fmt.Errorf("MoqErrorMedia")
 var ErrMoqErrorMux = fmt.Errorf("MoqErrorMux")
+var ErrMoqErrorAudio = fmt.Errorf("MoqErrorAudio")
 var ErrMoqErrorUrl = fmt.Errorf("MoqErrorUrl")
 var ErrMoqErrorTimeOverflow = fmt.Errorf("MoqErrorTimeOverflow")
 var ErrMoqErrorLogLevel = fmt.Errorf("MoqErrorLogLevel")
@@ -4417,6 +5030,25 @@ func (err MoqErrorMux) Error() string {
 
 func (self MoqErrorMux) Is(target error) bool {
 	return target == ErrMoqErrorMux
+}
+
+type MoqErrorAudio struct {
+	message string
+}
+
+func NewMoqErrorAudio() *MoqError {
+	return &MoqError{err: &MoqErrorAudio{}}
+}
+
+func (e MoqErrorAudio) destroy() {
+}
+
+func (err MoqErrorAudio) Error() string {
+	return fmt.Sprintf("Audio: %s", err.message)
+}
+
+func (self MoqErrorAudio) Is(target error) bool {
+	return target == ErrMoqErrorAudio
 }
 
 type MoqErrorUrl struct {
@@ -4694,30 +5326,32 @@ func (c FfiConverterMoqError) Read(reader io.Reader) *MoqError {
 	case 3:
 		return &MoqError{&MoqErrorMux{message}}
 	case 4:
-		return &MoqError{&MoqErrorUrl{message}}
+		return &MoqError{&MoqErrorAudio{message}}
 	case 5:
-		return &MoqError{&MoqErrorTimeOverflow{message}}
+		return &MoqError{&MoqErrorUrl{message}}
 	case 6:
-		return &MoqError{&MoqErrorLogLevel{message}}
+		return &MoqError{&MoqErrorTimeOverflow{message}}
 	case 7:
-		return &MoqError{&MoqErrorTask{message}}
+		return &MoqError{&MoqErrorLogLevel{message}}
 	case 8:
-		return &MoqError{&MoqErrorCancelled{message}}
+		return &MoqError{&MoqErrorTask{message}}
 	case 9:
-		return &MoqError{&MoqErrorClosed{message}}
+		return &MoqError{&MoqErrorCancelled{message}}
 	case 10:
-		return &MoqError{&MoqErrorConnect{message}}
+		return &MoqError{&MoqErrorClosed{message}}
 	case 11:
-		return &MoqError{&MoqErrorBind{message}}
+		return &MoqError{&MoqErrorConnect{message}}
 	case 12:
-		return &MoqError{&MoqErrorReject{message}}
+		return &MoqError{&MoqErrorBind{message}}
 	case 13:
-		return &MoqError{&MoqErrorAlreadyResponded{message}}
+		return &MoqError{&MoqErrorReject{message}}
 	case 14:
-		return &MoqError{&MoqErrorCodec{message}}
+		return &MoqError{&MoqErrorAlreadyResponded{message}}
 	case 15:
-		return &MoqError{&MoqErrorUnauthorized{message}}
+		return &MoqError{&MoqErrorCodec{message}}
 	case 16:
+		return &MoqError{&MoqErrorUnauthorized{message}}
+	case 17:
 		return &MoqError{&MoqErrorLog{message}}
 	default:
 		panic(fmt.Sprintf("Unknown error code %d in FfiConverterMoqError.Read()", errorID))
@@ -4733,32 +5367,34 @@ func (c FfiConverterMoqError) Write(writer io.Writer, value *MoqError) {
 		writeInt32(writer, 2)
 	case *MoqErrorMux:
 		writeInt32(writer, 3)
-	case *MoqErrorUrl:
+	case *MoqErrorAudio:
 		writeInt32(writer, 4)
-	case *MoqErrorTimeOverflow:
+	case *MoqErrorUrl:
 		writeInt32(writer, 5)
-	case *MoqErrorLogLevel:
+	case *MoqErrorTimeOverflow:
 		writeInt32(writer, 6)
-	case *MoqErrorTask:
+	case *MoqErrorLogLevel:
 		writeInt32(writer, 7)
-	case *MoqErrorCancelled:
+	case *MoqErrorTask:
 		writeInt32(writer, 8)
-	case *MoqErrorClosed:
+	case *MoqErrorCancelled:
 		writeInt32(writer, 9)
-	case *MoqErrorConnect:
+	case *MoqErrorClosed:
 		writeInt32(writer, 10)
-	case *MoqErrorBind:
+	case *MoqErrorConnect:
 		writeInt32(writer, 11)
-	case *MoqErrorReject:
+	case *MoqErrorBind:
 		writeInt32(writer, 12)
-	case *MoqErrorAlreadyResponded:
+	case *MoqErrorReject:
 		writeInt32(writer, 13)
-	case *MoqErrorCodec:
+	case *MoqErrorAlreadyResponded:
 		writeInt32(writer, 14)
-	case *MoqErrorUnauthorized:
+	case *MoqErrorCodec:
 		writeInt32(writer, 15)
-	case *MoqErrorLog:
+	case *MoqErrorUnauthorized:
 		writeInt32(writer, 16)
+	case *MoqErrorLog:
+		writeInt32(writer, 17)
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterMoqError.Write", value))
@@ -4774,6 +5410,8 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 	case MoqErrorMedia:
 		variantValue.destroy()
 	case MoqErrorMux:
+		variantValue.destroy()
+	case MoqErrorAudio:
 		variantValue.destroy()
 	case MoqErrorUrl:
 		variantValue.destroy()
@@ -4804,6 +5442,47 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiDestroyerMoqError.Destroy", value))
+	}
+}
+
+type FfiConverterOptionalUint32 struct{}
+
+var FfiConverterOptionalUint32INSTANCE = FfiConverterOptionalUint32{}
+
+func (c FfiConverterOptionalUint32) Lift(rb RustBufferI) *uint32 {
+	return LiftFromRustBuffer[*uint32](c, rb)
+}
+
+func (_ FfiConverterOptionalUint32) Read(reader io.Reader) *uint32 {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterUint32INSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalUint32) Lower(value *uint32) C.RustBuffer {
+	return LowerIntoRustBuffer[*uint32](c, value)
+}
+
+func (c FfiConverterOptionalUint32) LowerExternal(value *uint32) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*uint32](c, value))
+}
+
+func (_ FfiConverterOptionalUint32) Write(writer io.Writer, value *uint32) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterUint32INSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalUint32 struct{}
+
+func (_ FfiDestroyerOptionalUint32) Destroy(value *uint32) {
+	if value != nil {
+		FfiDestroyerUint32{}.Destroy(*value)
 	}
 }
 
@@ -5173,6 +5852,47 @@ type FfiDestroyerOptionalMoqRequest struct{}
 func (_ FfiDestroyerOptionalMoqRequest) Destroy(value **MoqRequest) {
 	if value != nil {
 		FfiDestroyerMoqRequest{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalMoqAudioFrame struct{}
+
+var FfiConverterOptionalMoqAudioFrameINSTANCE = FfiConverterOptionalMoqAudioFrame{}
+
+func (c FfiConverterOptionalMoqAudioFrame) Lift(rb RustBufferI) *MoqAudioFrame {
+	return LiftFromRustBuffer[*MoqAudioFrame](c, rb)
+}
+
+func (_ FfiConverterOptionalMoqAudioFrame) Read(reader io.Reader) *MoqAudioFrame {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterMoqAudioFrameINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalMoqAudioFrame) Lower(value *MoqAudioFrame) C.RustBuffer {
+	return LowerIntoRustBuffer[*MoqAudioFrame](c, value)
+}
+
+func (c FfiConverterOptionalMoqAudioFrame) LowerExternal(value *MoqAudioFrame) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[*MoqAudioFrame](c, value))
+}
+
+func (_ FfiConverterOptionalMoqAudioFrame) Write(writer io.Writer, value *MoqAudioFrame) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterMoqAudioFrameINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalMoqAudioFrame struct{}
+
+func (_ FfiDestroyerOptionalMoqAudioFrame) Destroy(value *MoqAudioFrame) {
+	if value != nil {
+		FfiDestroyerMoqAudioFrame{}.Destroy(*value)
 	}
 }
 
