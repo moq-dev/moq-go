@@ -679,6 +679,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_stream()
+		})
+		if checksum != 3644 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_stream: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_track()
 		})
 		if checksum != 63909 {
@@ -765,6 +774,24 @@ func uniffiCheckChecksums() {
 		if checksum != 4813 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqmediaproducer_write_frame: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqmediastreamproducer_finish()
+		})
+		if checksum != 44939 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqmediastreamproducer_finish: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqmediastreamproducer_write()
+		})
+		if checksum != 47083 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqmediastreamproducer_write: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -1053,6 +1080,15 @@ func uniffiCheckChecksums() {
 		if checksum != 41657 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqsession_closed: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqsession_shutdown()
+		})
+		if checksum != 15895 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqsession_shutdown: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -2082,6 +2118,13 @@ type MoqBroadcastProducerInterface interface {
 	//
 	// `format` controls the encoding of `init` and frame payloads.
 	PublishMedia(format string, init []byte) (*MoqMediaProducer, error)
+	// Create a media track fed by a raw byte stream with unknown frame
+	// boundaries (e.g. piped Annex-B H.264 straight from an encoder).
+	//
+	// Unlike [`Self::publish_media`], the importer infers frame boundaries, so
+	// the caller just pushes bytes via [`MoqMediaStreamProducer::write`]. Only
+	// self-describing stream formats are supported (avc3, hev1, av01, fmp4, mkv).
+	PublishMediaStream(format string) (*MoqMediaStreamProducer, error)
 	// Create a track for arbitrary byte payloads — no codec or container.
 	//
 	// Same pattern as moq-boy's `status` and `command` tracks: raw UTF-8/JSON
@@ -2168,6 +2211,27 @@ func (_self *MoqBroadcastProducer) PublishMedia(format string, init []byte) (*Mo
 		return _uniffiDefaultValue, _uniffiErr
 	} else {
 		return FfiConverterMoqMediaProducerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Create a media track fed by a raw byte stream with unknown frame
+// boundaries (e.g. piped Annex-B H.264 straight from an encoder).
+//
+// Unlike [`Self::publish_media`], the importer infers frame boundaries, so
+// the caller just pushes bytes via [`MoqMediaStreamProducer::write`]. Only
+// self-describing stream formats are supported (avc3, hev1, av01, fmp4, mkv).
+func (_self *MoqBroadcastProducer) PublishMediaStream(format string) (*MoqMediaStreamProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_media_stream(
+			_pointer, FfiConverterStringINSTANCE.Lower(format), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqMediaStreamProducer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqMediaStreamProducerINSTANCE.Lift(_uniffiRV), nil
 	}
 }
 
@@ -3069,6 +3133,107 @@ func (_ FfiDestroyerMoqMediaProducer) Destroy(value *MoqMediaProducer) {
 	value.Destroy()
 }
 
+type MoqMediaStreamProducerInterface interface {
+	// Finalize the track.
+	//
+	// The importer emits each access unit when the *next* one's start code
+	// arrives, so a trailing access unit with no following delimiter (e.g. the
+	// last frame at EOF) is not emitted. This matches moq-cli's stdin path.
+	Finish() error
+	// Push raw stream bytes (e.g. Annex-B H.264 from an encoder). The importer
+	// frames whole access units and keeps any partial trailing frame for the
+	// next call, so callers can write arbitrary chunks.
+	Write(payload []byte) error
+}
+type MoqMediaStreamProducer struct {
+	ffiObject FfiObject
+}
+
+// Finalize the track.
+//
+// The importer emits each access unit when the *next* one's start code
+// arrives, so a trailing access unit with no following delimiter (e.g. the
+// last frame at EOF) is not emitted. This matches moq-cli's stdin path.
+func (_self *MoqMediaStreamProducer) Finish() error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqMediaStreamProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqmediastreamproducer_finish(
+			_pointer, _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+
+// Push raw stream bytes (e.g. Annex-B H.264 from an encoder). The importer
+// frames whole access units and keeps any partial trailing frame for the
+// next call, so callers can write arbitrary chunks.
+func (_self *MoqMediaStreamProducer) Write(payload []byte) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqMediaStreamProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqmediastreamproducer_write(
+			_pointer, FfiConverterBytesINSTANCE.Lower(payload), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+func (object *MoqMediaStreamProducer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqMediaStreamProducer struct{}
+
+var FfiConverterMoqMediaStreamProducerINSTANCE = FfiConverterMoqMediaStreamProducer{}
+
+func (c FfiConverterMoqMediaStreamProducer) Lift(handle C.uint64_t) *MoqMediaStreamProducer {
+	result := &MoqMediaStreamProducer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqmediastreamproducer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqmediastreamproducer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqMediaStreamProducer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqMediaStreamProducer) Read(reader io.Reader) *MoqMediaStreamProducer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqMediaStreamProducer) Lower(value *MoqMediaStreamProducer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqMediaStreamProducer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqMediaStreamProducer) Write(writer io.Writer, value *MoqMediaStreamProducer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqMediaStreamProducer(handle uint64) *MoqMediaStreamProducer {
+	return FfiConverterMoqMediaStreamProducerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqMediaStreamProducer(value *MoqMediaStreamProducer) uint64 {
+	return uint64(FfiConverterMoqMediaStreamProducerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqMediaStreamProducer struct{}
+
+func (_ FfiDestroyerMoqMediaStreamProducer) Destroy(value *MoqMediaStreamProducer) {
+	value.Destroy()
+}
+
 type MoqOriginConsumerInterface interface {
 	// Subscribe to all broadcast announcements under a prefix.
 	Announced(prefix string) (*MoqAnnounced, error)
@@ -3761,6 +3926,13 @@ type MoqSessionInterface interface {
 	Cancel(code uint32)
 	// Wait until the session is closed.
 	Closed() error
+	// Graceful shutdown. Equivalent to `cancel(0)`. Documents the
+	// convention that code 0 means "no error" so callers don't have to
+	// pick one. Named `shutdown` (not `close`) because UniFFI's Kotlin
+	// generator already emits an `AutoCloseable.close()` that releases
+	// the FFI handle, and shadowing it would silently mean a different
+	// thing per binding.
+	Shutdown()
 }
 type MoqSession struct {
 	ffiObject FfiObject
@@ -3807,6 +3979,22 @@ func (_self *MoqSession) Closed() error {
 	}
 
 	return err
+}
+
+// Graceful shutdown. Equivalent to `cancel(0)`. Documents the
+// convention that code 0 means "no error" so callers don't have to
+// pick one. Named `shutdown` (not `close`) because UniFFI's Kotlin
+// generator already emits an `AutoCloseable.close()` that releases
+// the FFI handle, and shadowing it would silently mean a different
+// thing per binding.
+func (_self *MoqSession) Shutdown() {
+	_pointer := _self.ffiObject.incrementPointer("*MoqSession")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqsession_shutdown(
+			_pointer, _uniffiStatus)
+		return false
+	})
 }
 func (object *MoqSession) Destroy() {
 	runtime.SetFinalizer(object, nil)
