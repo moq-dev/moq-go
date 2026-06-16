@@ -641,6 +641,26 @@ uint64_t uniffi_moq_ffi_fn_method_moqoriginproducer_consume(uint64_t ptr, RustCa
 void uniffi_moq_ffi_fn_method_moqoriginproducer_publish(uint64_t ptr, RustBuffer path, uint64_t broadcast, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQBROADCASTDYNAMIC
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQBROADCASTDYNAMIC
+uint64_t uniffi_moq_ffi_fn_clone_moqbroadcastdynamic(uint64_t handle, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_FREE_MOQBROADCASTDYNAMIC
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_FREE_MOQBROADCASTDYNAMIC
+void uniffi_moq_ffi_fn_free_moqbroadcastdynamic(uint64_t handle, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTDYNAMIC_CANCEL
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTDYNAMIC_CANCEL
+void uniffi_moq_ffi_fn_method_moqbroadcastdynamic_cancel(uint64_t ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTDYNAMIC_REQUESTED_TRACK
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTDYNAMIC_REQUESTED_TRACK
+uint64_t uniffi_moq_ffi_fn_method_moqbroadcastdynamic_requested_track(uint64_t ptr
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQBROADCASTPRODUCER
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQBROADCASTPRODUCER
 uint64_t uniffi_moq_ffi_fn_clone_moqbroadcastproducer(uint64_t handle, RustCallStatus *out_status
@@ -667,6 +687,11 @@ uint64_t uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_audio(uint64_t pt
 uint64_t uniffi_moq_ffi_fn_method_moqbroadcastproducer_consume(uint64_t ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_DYNAMIC
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_DYNAMIC
+uint64_t uniffi_moq_ffi_fn_method_moqbroadcastproducer_dynamic(uint64_t ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_FINISH
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_FINISH
 void uniffi_moq_ffi_fn_method_moqbroadcastproducer_finish(uint64_t ptr, RustCallStatus *out_status
@@ -675,6 +700,11 @@ void uniffi_moq_ffi_fn_method_moqbroadcastproducer_finish(uint64_t ptr, RustCall
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA
 uint64_t uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_media(uint64_t ptr, RustBuffer format, RustBuffer init, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA_ON_TRACK
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA_ON_TRACK
+uint64_t uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_media_on_track(uint64_t ptr, uint64_t track, RustBuffer format, RustBuffer init, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA_STREAM
@@ -780,6 +810,11 @@ uint64_t uniffi_moq_ffi_fn_clone_moqtrackproducer(uint64_t handle, RustCallStatu
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_FREE_MOQTRACKPRODUCER
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_FREE_MOQTRACKPRODUCER
 void uniffi_moq_ffi_fn_free_moqtrackproducer(uint64_t handle, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQTRACKPRODUCER_ABORT
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQTRACKPRODUCER_ABORT
+void uniffi_moq_ffi_fn_method_moqtrackproducer_abort(uint64_t ptr, int32_t error_code, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQTRACKPRODUCER_APPEND_GROUP
@@ -972,6 +1007,16 @@ void uniffi_moq_ffi_fn_method_moqclient_set_publish(uint64_t ptr, RustBuffer ori
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 void uniffi_moq_ffi_fn_method_moqclient_set_tls_disable_verify(uint64_t ptr, int8_t disable, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
+void uniffi_moq_ffi_fn_method_moqclient_set_tls_fingerprints(uint64_t ptr, RustBuffer fingerprints, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_ROOTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_ROOTS
+void uniffi_moq_ffi_fn_method_moqclient_set_tls_roots(uint64_t ptr, RustBuffer paths, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQSESSION
@@ -1444,6 +1489,18 @@ uint16_t uniffi_moq_ffi_checksum_method_moqoriginproducer_publish(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTDYNAMIC_CANCEL
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTDYNAMIC_CANCEL
+uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_cancel(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTDYNAMIC_REQUESTED_TRACK
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTDYNAMIC_REQUESTED_TRACK
+uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_requested_track(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_AUDIO
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_AUDIO
 uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_audio(void
@@ -1456,6 +1513,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_consume(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_DYNAMIC
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_DYNAMIC
+uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_dynamic(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_FINISH
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_FINISH
 uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_finish(void
@@ -1465,6 +1528,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_finish(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA
 uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA_ON_TRACK
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQBROADCASTPRODUCER_PUBLISH_MEDIA_ON_TRACK
+uint16_t uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_on_track(void
     
 );
 #endif
@@ -1543,6 +1612,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqmediastreamproducer_finish(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQMEDIASTREAMPRODUCER_WRITE
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQMEDIASTREAMPRODUCER_WRITE
 uint16_t uniffi_moq_ffi_checksum_method_moqmediastreamproducer_write(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQTRACKPRODUCER_ABORT
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQTRACKPRODUCER_ABORT
+uint16_t uniffi_moq_ffi_checksum_method_moqtrackproducer_abort(void
     
 );
 #endif
@@ -1723,6 +1798,18 @@ uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_publish(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_disable_verify(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
+uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_ROOTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_ROOTS
+uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_roots(void
     
 );
 #endif

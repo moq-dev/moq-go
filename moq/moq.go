@@ -643,6 +643,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_cancel()
+		})
+		if checksum != 41601 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_cancel: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_requested_track()
+		})
+		if checksum != 37814 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastdynamic_requested_track: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_audio()
 		})
 		if checksum != 39786 {
@@ -657,6 +675,15 @@ func uniffiCheckChecksums() {
 		if checksum != 46595 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_consume: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_dynamic()
+		})
+		if checksum != 46433 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_dynamic: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -679,6 +706,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_on_track()
+		})
+		if checksum != 58765 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_on_track: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_media_stream()
 		})
 		if checksum != 3644 {
@@ -690,7 +726,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_track()
 		})
-		if checksum != 63909 {
+		if checksum != 35208 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_track: UniFFI API checksum mismatch")
 		}
@@ -796,6 +832,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqtrackproducer_abort()
+		})
+		if checksum != 41393 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqtrackproducer_abort: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqtrackproducer_append_group()
 		})
 		if checksum != 28433 {
@@ -852,7 +897,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqtrackproducer_write_frame()
 		})
-		if checksum != 62709 {
+		if checksum != 14812 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqtrackproducer_write_frame: UniFFI API checksum mismatch")
 		}
@@ -1066,6 +1111,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints()
+		})
+		if checksum != 55328 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_roots()
+		})
+		if checksum != 54966 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_roots: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqsession_cancel()
 		})
 		if checksum != 24930 {
@@ -1176,6 +1239,30 @@ func (FfiConverterUint32) Read(reader io.Reader) uint32 {
 type FfiDestroyerUint32 struct{}
 
 func (FfiDestroyerUint32) Destroy(_ uint32) {}
+
+type FfiConverterInt32 struct{}
+
+var FfiConverterInt32INSTANCE = FfiConverterInt32{}
+
+func (FfiConverterInt32) Lower(value int32) C.int32_t {
+	return C.int32_t(value)
+}
+
+func (FfiConverterInt32) Write(writer io.Writer, value int32) {
+	writeInt32(writer, value)
+}
+
+func (FfiConverterInt32) Lift(value C.int32_t) int32 {
+	return int32(value)
+}
+
+func (FfiConverterInt32) Read(reader io.Reader) int32 {
+	return readInt32(reader)
+}
+
+type FfiDestroyerInt32 struct{}
+
+func (FfiDestroyerInt32) Destroy(_ int32) {}
 
 type FfiConverterUint64 struct{}
 
@@ -2105,6 +2192,120 @@ func (_ FfiDestroyerMoqBroadcastConsumer) Destroy(value *MoqBroadcastConsumer) {
 	value.Destroy()
 }
 
+type MoqBroadcastDynamicInterface interface {
+	// Cancel all current and future `requested_track()` calls.
+	Cancel()
+	// Wait for the next subscriber-requested track.
+	//
+	// Returns an error once the broadcast is closed or aborted.
+	RequestedTrack() (*MoqTrackProducer, error)
+}
+type MoqBroadcastDynamic struct {
+	ffiObject FfiObject
+}
+
+// Cancel all current and future `requested_track()` calls.
+func (_self *MoqBroadcastDynamic) Cancel() {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastDynamic")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqbroadcastdynamic_cancel(
+			_pointer, _uniffiStatus)
+		return false
+	})
+}
+
+// Wait for the next subscriber-requested track.
+//
+// Returns an error once the broadcast is closed or aborted.
+func (_self *MoqBroadcastDynamic) RequestedTrack() (*MoqTrackProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastDynamic")
+	defer _self.ffiObject.decrementPointer()
+	res, err := uniffiRustCallAsync[*MoqError](
+		FfiConverterMoqErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+			res := C.ffi_moq_ffi_rust_future_complete_u64(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi C.uint64_t) *MoqTrackProducer {
+			return FfiConverterMoqTrackProducerINSTANCE.Lift(ffi)
+		},
+		C.uniffi_moq_ffi_fn_method_moqbroadcastdynamic_requested_track(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_poll_u64(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_free_u64(handle)
+		},
+	)
+
+	if err == nil {
+		return res, nil
+	}
+
+	return res, err
+}
+func (object *MoqBroadcastDynamic) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqBroadcastDynamic struct{}
+
+var FfiConverterMoqBroadcastDynamicINSTANCE = FfiConverterMoqBroadcastDynamic{}
+
+func (c FfiConverterMoqBroadcastDynamic) Lift(handle C.uint64_t) *MoqBroadcastDynamic {
+	result := &MoqBroadcastDynamic{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqbroadcastdynamic(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqbroadcastdynamic(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqBroadcastDynamic).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqBroadcastDynamic) Read(reader io.Reader) *MoqBroadcastDynamic {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqBroadcastDynamic) Lower(value *MoqBroadcastDynamic) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqBroadcastDynamic")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqBroadcastDynamic) Write(writer io.Writer, value *MoqBroadcastDynamic) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqBroadcastDynamic(handle uint64) *MoqBroadcastDynamic {
+	return FfiConverterMoqBroadcastDynamicINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqBroadcastDynamic(value *MoqBroadcastDynamic) uint64 {
+	return uint64(FfiConverterMoqBroadcastDynamicINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqBroadcastDynamic struct{}
+
+func (_ FfiDestroyerMoqBroadcastDynamic) Destroy(value *MoqBroadcastDynamic) {
+	value.Destroy()
+}
+
 type MoqBroadcastProducerInterface interface {
 	// Open an audio track on this broadcast. The catalog rendition is
 	// registered immediately so subscribers can find the track even
@@ -2112,12 +2313,23 @@ type MoqBroadcastProducerInterface interface {
 	PublishAudio(name string, input MoqAudioEncoderInput, output MoqAudioEncoderOutput) (*MoqAudioProducer, error)
 	// Create a consumer that reads from this broadcast's tracks.
 	Consume() (*MoqBroadcastConsumer, error)
+	// Create a dynamic producer that yields tracks requested by subscribers.
+	//
+	// Hold the returned object for as long as missing track requests should be
+	// accepted. Dropping it makes future subscriptions to unknown tracks fail.
+	Dynamic() (*MoqBroadcastDynamic, error)
 	// Finish this publisher, finalizing the catalog stream.
 	Finish() error
 	// Create a new media track for this broadcast.
 	//
 	// `format` controls the encoding of `init` and frame payloads.
 	PublishMedia(format string, init []byte) (*MoqMediaProducer, error)
+	// Publish media on an existing track, usually one returned by
+	// [`MoqBroadcastDynamic::requested_track`].
+	//
+	// `format` controls the encoding of `init` and frame payloads. Only
+	// single-track formats are supported.
+	PublishMediaOnTrack(track *MoqTrackProducer, format string, init []byte) (*MoqMediaProducer, error)
 	// Create a media track fed by a raw byte stream with unknown frame
 	// boundaries (e.g. piped Annex-B H.264 straight from an encoder).
 	//
@@ -2125,7 +2337,7 @@ type MoqBroadcastProducerInterface interface {
 	// the caller just pushes bytes via [`MoqMediaStreamProducer::write`]. Only
 	// self-describing stream formats are supported (avc3, hev1, av01, fmp4, mkv).
 	PublishMediaStream(format string) (*MoqMediaStreamProducer, error)
-	// Create a track for arbitrary byte payloads — no codec or container.
+	// Create a track for arbitrary byte payloads, no codec or container.
 	//
 	// Same pattern as moq-boy's `status` and `command` tracks: raw UTF-8/JSON
 	// bytes written directly to moq-lite groups with no media framing.
@@ -2184,6 +2396,25 @@ func (_self *MoqBroadcastProducer) Consume() (*MoqBroadcastConsumer, error) {
 	}
 }
 
+// Create a dynamic producer that yields tracks requested by subscribers.
+//
+// Hold the returned object for as long as missing track requests should be
+// accepted. Dropping it makes future subscriptions to unknown tracks fail.
+func (_self *MoqBroadcastProducer) Dynamic() (*MoqBroadcastDynamic, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_dynamic(
+			_pointer, _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqBroadcastDynamic
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqBroadcastDynamicINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
 // Finish this publisher, finalizing the catalog stream.
 func (_self *MoqBroadcastProducer) Finish() error {
 	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
@@ -2214,6 +2445,26 @@ func (_self *MoqBroadcastProducer) PublishMedia(format string, init []byte) (*Mo
 	}
 }
 
+// Publish media on an existing track, usually one returned by
+// [`MoqBroadcastDynamic::requested_track`].
+//
+// `format` controls the encoding of `init` and frame payloads. Only
+// single-track formats are supported.
+func (_self *MoqBroadcastProducer) PublishMediaOnTrack(track *MoqTrackProducer, format string, init []byte) (*MoqMediaProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_media_on_track(
+			_pointer, FfiConverterMoqTrackProducerINSTANCE.Lower(track), FfiConverterStringINSTANCE.Lower(format), FfiConverterBytesINSTANCE.Lower(init), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqMediaProducer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqMediaProducerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
 // Create a media track fed by a raw byte stream with unknown frame
 // boundaries (e.g. piped Annex-B H.264 straight from an encoder).
 //
@@ -2235,7 +2486,7 @@ func (_self *MoqBroadcastProducer) PublishMediaStream(format string) (*MoqMediaS
 	}
 }
 
-// Create a track for arbitrary byte payloads — no codec or container.
+// Create a track for arbitrary byte payloads, no codec or container.
 //
 // Same pattern as moq-boy's `status` and `command` tracks: raw UTF-8/JSON
 // bytes written directly to moq-lite groups with no media framing.
@@ -2438,6 +2689,18 @@ type MoqClientInterface interface {
 	SetPublish(origin **MoqOriginProducer)
 	// Disable TLS certificate verification (for development only).
 	SetTlsDisableVerify(disable bool)
+	// Pin the peer to a certificate with one of these SHA-256 fingerprints, encoded as hex.
+	//
+	// This is the native equivalent of the browser's WebTransport `serverCertificateHashes`
+	// and accepts the same values a server reports (see `MoqServer.cert_fingerprints`). Use it
+	// to trust a self-signed certificate without disabling verification. An empty list clears
+	// any pinned fingerprints.
+	SetTlsFingerprints(fingerprints []string)
+	// Trust these PEM root certificate file(s) instead of the system roots.
+	//
+	// Pass the paths to PEM-encoded CA certificates. An empty list restores the
+	// default behavior of using the platform's native root store.
+	SetTlsRoots(paths []string)
 }
 type MoqClient struct {
 	ffiObject FfiObject
@@ -2540,6 +2803,36 @@ func (_self *MoqClient) SetTlsDisableVerify(disable bool) {
 	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
 		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_disable_verify(
 			_pointer, FfiConverterBoolINSTANCE.Lower(disable), _uniffiStatus)
+		return false
+	})
+}
+
+// Pin the peer to a certificate with one of these SHA-256 fingerprints, encoded as hex.
+//
+// This is the native equivalent of the browser's WebTransport `serverCertificateHashes`
+// and accepts the same values a server reports (see `MoqServer.cert_fingerprints`). Use it
+// to trust a self-signed certificate without disabling verification. An empty list clears
+// any pinned fingerprints.
+func (_self *MoqClient) SetTlsFingerprints(fingerprints []string) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_fingerprints(
+			_pointer, FfiConverterSequenceStringINSTANCE.Lower(fingerprints), _uniffiStatus)
+		return false
+	})
+}
+
+// Trust these PEM root certificate file(s) instead of the system roots.
+//
+// Pass the paths to PEM-encoded CA certificates. An empty list restores the
+// default behavior of using the platform's native root store.
+func (_self *MoqClient) SetTlsRoots(paths []string) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_roots(
+			_pointer, FfiConverterSequenceStringINSTANCE.Lower(paths), _uniffiStatus)
 		return false
 	})
 }
@@ -4253,6 +4546,8 @@ func (_ FfiDestroyerMoqTrackConsumer) Destroy(value *MoqTrackConsumer) {
 }
 
 type MoqTrackProducerInterface interface {
+	// Abort this track with an application error code.
+	Abort(errorCode int32) error
 	// Append a new group to the track, returning a producer for writing frames into it.
 	AppendGroup() (*MoqGroupProducer, error)
 	// Create a consumer that reads from this producer's track.
@@ -4266,12 +4561,24 @@ type MoqTrackProducerInterface interface {
 	Unused() error
 	// Wait until this track has at least one active consumer.
 	Used() error
-	// Convenience: write a single-frame group in one call — the same pattern
+	// Convenience: write a single-frame group in one call, the same pattern
 	// used by moq-boy's status/command tracks.
 	WriteFrame(payload []byte) error
 }
 type MoqTrackProducer struct {
 	ffiObject FfiObject
+}
+
+// Abort this track with an application error code.
+func (_self *MoqTrackProducer) Abort(errorCode int32) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqTrackProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqtrackproducer_abort(
+			_pointer, FfiConverterInt32INSTANCE.Lower(errorCode), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
 }
 
 // Append a new group to the track, returning a producer for writing frames into it.
@@ -4401,7 +4708,7 @@ func (_self *MoqTrackProducer) Used() error {
 	return err
 }
 
-// Convenience: write a single-frame group in one call — the same pattern
+// Convenience: write a single-frame group in one call, the same pattern
 // used by moq-boy's status/command tracks.
 func (_self *MoqTrackProducer) WriteFrame(payload []byte) error {
 	_pointer := _self.ffiObject.incrementPointer("*MoqTrackProducer")
@@ -5159,7 +5466,9 @@ var ErrMoqErrorBind = fmt.Errorf("MoqErrorBind")
 var ErrMoqErrorReject = fmt.Errorf("MoqErrorReject")
 var ErrMoqErrorAlreadyResponded = fmt.Errorf("MoqErrorAlreadyResponded")
 var ErrMoqErrorCodec = fmt.Errorf("MoqErrorCodec")
+var ErrMoqErrorInvalidErrorCode = fmt.Errorf("MoqErrorInvalidErrorCode")
 var ErrMoqErrorUnauthorized = fmt.Errorf("MoqErrorUnauthorized")
+var ErrMoqErrorForbidden = fmt.Errorf("MoqErrorForbidden")
 var ErrMoqErrorLog = fmt.Errorf("MoqErrorLog")
 
 // Variant structs
@@ -5448,6 +5757,25 @@ func (self MoqErrorCodec) Is(target error) bool {
 	return target == ErrMoqErrorCodec
 }
 
+type MoqErrorInvalidErrorCode struct {
+	message string
+}
+
+func NewMoqErrorInvalidErrorCode() *MoqError {
+	return &MoqError{err: &MoqErrorInvalidErrorCode{}}
+}
+
+func (e MoqErrorInvalidErrorCode) destroy() {
+}
+
+func (err MoqErrorInvalidErrorCode) Error() string {
+	return fmt.Sprintf("InvalidErrorCode: %s", err.message)
+}
+
+func (self MoqErrorInvalidErrorCode) Is(target error) bool {
+	return target == ErrMoqErrorInvalidErrorCode
+}
+
 type MoqErrorUnauthorized struct {
 	message string
 }
@@ -5465,6 +5793,25 @@ func (err MoqErrorUnauthorized) Error() string {
 
 func (self MoqErrorUnauthorized) Is(target error) bool {
 	return target == ErrMoqErrorUnauthorized
+}
+
+type MoqErrorForbidden struct {
+	message string
+}
+
+func NewMoqErrorForbidden() *MoqError {
+	return &MoqError{err: &MoqErrorForbidden{}}
+}
+
+func (e MoqErrorForbidden) destroy() {
+}
+
+func (err MoqErrorForbidden) Error() string {
+	return fmt.Sprintf("Forbidden: %s", err.message)
+}
+
+func (self MoqErrorForbidden) Is(target error) bool {
+	return target == ErrMoqErrorForbidden
 }
 
 type MoqErrorLog struct {
@@ -5538,8 +5885,12 @@ func (c FfiConverterMoqError) Read(reader io.Reader) *MoqError {
 	case 15:
 		return &MoqError{&MoqErrorCodec{message}}
 	case 16:
-		return &MoqError{&MoqErrorUnauthorized{message}}
+		return &MoqError{&MoqErrorInvalidErrorCode{message}}
 	case 17:
+		return &MoqError{&MoqErrorUnauthorized{message}}
+	case 18:
+		return &MoqError{&MoqErrorForbidden{message}}
+	case 19:
 		return &MoqError{&MoqErrorLog{message}}
 	default:
 		panic(fmt.Sprintf("Unknown error code %d in FfiConverterMoqError.Read()", errorID))
@@ -5579,10 +5930,14 @@ func (c FfiConverterMoqError) Write(writer io.Writer, value *MoqError) {
 		writeInt32(writer, 14)
 	case *MoqErrorCodec:
 		writeInt32(writer, 15)
-	case *MoqErrorUnauthorized:
+	case *MoqErrorInvalidErrorCode:
 		writeInt32(writer, 16)
-	case *MoqErrorLog:
+	case *MoqErrorUnauthorized:
 		writeInt32(writer, 17)
+	case *MoqErrorForbidden:
+		writeInt32(writer, 18)
+	case *MoqErrorLog:
+		writeInt32(writer, 19)
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterMoqError.Write", value))
@@ -5623,7 +5978,11 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 		variantValue.destroy()
 	case MoqErrorCodec:
 		variantValue.destroy()
+	case MoqErrorInvalidErrorCode:
+		variantValue.destroy()
 	case MoqErrorUnauthorized:
+		variantValue.destroy()
+	case MoqErrorForbidden:
 		variantValue.destroy()
 	case MoqErrorLog:
 		variantValue.destroy()
