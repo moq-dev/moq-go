@@ -598,6 +598,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqannouncement_hops()
+		})
+		if checksum != 43996 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqannouncement_hops: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqannouncement_path()
 		})
 		if checksum != 33642 {
@@ -1766,6 +1775,8 @@ func (_ FfiDestroyerMoqAnnouncedBroadcast) Destroy(value *MoqAnnouncedBroadcast)
 type MoqAnnouncementInterface interface {
 	// The broadcast consumer.
 	Broadcast() *MoqBroadcastConsumer
+	// The origin ids of the relay hops this broadcast traversed, oldest first.
+	Hops() []uint64
 	// The path of the announced broadcast.
 	Path() string
 }
@@ -1782,6 +1793,18 @@ func (_self *MoqAnnouncement) Broadcast() *MoqBroadcastConsumer {
 	return FfiConverterMoqBroadcastConsumerINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
 		return C.uniffi_moq_ffi_fn_method_moqannouncement_broadcast(
 			_pointer, _uniffiStatus)
+	}))
+}
+
+// The origin ids of the relay hops this broadcast traversed, oldest first.
+func (_self *MoqAnnouncement) Hops() []uint64 {
+	_pointer := _self.ffiObject.incrementPointer("*MoqAnnouncement")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceUint64INSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_moq_ffi_fn_method_moqannouncement_hops(
+				_pointer, _uniffiStatus),
+		}
 	}))
 }
 
@@ -6665,6 +6688,53 @@ type FfiDestroyerOptionalMoqFrame struct{}
 func (_ FfiDestroyerOptionalMoqFrame) Destroy(value *MoqFrame) {
 	if value != nil {
 		FfiDestroyerMoqFrame{}.Destroy(*value)
+	}
+}
+
+type FfiConverterSequenceUint64 struct{}
+
+var FfiConverterSequenceUint64INSTANCE = FfiConverterSequenceUint64{}
+
+func (c FfiConverterSequenceUint64) Lift(rb RustBufferI) []uint64 {
+	return LiftFromRustBuffer[[]uint64](c, rb)
+}
+
+func (c FfiConverterSequenceUint64) Read(reader io.Reader) []uint64 {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]uint64, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterUint64INSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceUint64) Lower(value []uint64) C.RustBuffer {
+	return LowerIntoRustBuffer[[]uint64](c, value)
+}
+
+func (c FfiConverterSequenceUint64) LowerExternal(value []uint64) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[[]uint64](c, value))
+}
+
+func (c FfiConverterSequenceUint64) Write(writer io.Writer, value []uint64) {
+	if len(value) > math.MaxInt32 {
+		panic("[]uint64 is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterUint64INSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceUint64 struct{}
+
+func (FfiDestroyerSequenceUint64) Destroy(sequence []uint64) {
+	for _, value := range sequence {
+		FfiDestroyerUint64{}.Destroy(value)
 	}
 }
 

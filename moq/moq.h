@@ -590,6 +590,11 @@ void uniffi_moq_ffi_fn_free_moqannouncement(uint64_t handle, RustCallStatus *out
 uint64_t uniffi_moq_ffi_fn_method_moqannouncement_broadcast(uint64_t ptr, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQANNOUNCEMENT_HOPS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQANNOUNCEMENT_HOPS
+RustBuffer uniffi_moq_ffi_fn_method_moqannouncement_hops(uint64_t ptr, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQANNOUNCEMENT_PATH
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQANNOUNCEMENT_PATH
 RustBuffer uniffi_moq_ffi_fn_method_moqannouncement_path(uint64_t ptr, RustCallStatus *out_status
@@ -1466,6 +1471,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqannouncedbroadcast_cancel(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQANNOUNCEMENT_BROADCAST
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQANNOUNCEMENT_BROADCAST
 uint16_t uniffi_moq_ffi_checksum_method_moqannouncement_broadcast(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQANNOUNCEMENT_HOPS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQANNOUNCEMENT_HOPS
+uint16_t uniffi_moq_ffi_checksum_method_moqannouncement_hops(void
     
 );
 #endif
