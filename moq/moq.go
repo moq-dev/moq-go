@@ -733,6 +733,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_remove_catalog_section()
+		})
+		if checksum != 37261 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_remove_catalog_section: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_set_catalog_section()
+		})
+		if checksum != 25173 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_set_catalog_section: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqgroupproducer_consume()
 		})
 		if checksum != 12315 {
@@ -2342,6 +2360,20 @@ type MoqBroadcastProducerInterface interface {
 	// Same pattern as moq-boy's `status` and `command` tracks: raw UTF-8/JSON
 	// bytes written directly to moq-lite groups with no media framing.
 	PublishTrack(name string) (*MoqTrackProducer, error)
+	// Remove an untyped application section from this broadcast's catalog by name.
+	//
+	// A no-op if no section with that name exists. The catalog is republished automatically.
+	RemoveCatalogSection(name string) error
+	// Set (or replace) an untyped application section in this broadcast's catalog.
+	//
+	// `value` is any JSON document (object, array, string, ...). The section lands as a
+	// top-level key alongside `video`/`audio` and reaches subscribers via
+	// [`MoqCatalog::extra`](crate::media::MoqCatalog). `name` must not be a reserved media
+	// section (`video`/`audio`). The catalog is republished automatically.
+	//
+	// Use this to advertise a side-channel track (e.g. a transcript or captions track) that
+	// the catalog doesn't model natively, mirroring the JS catalog's pass-through sections.
+	SetCatalogSection(name string, value string) error
 }
 type MoqBroadcastProducer struct {
 	ffiObject FfiObject
@@ -2503,6 +2535,40 @@ func (_self *MoqBroadcastProducer) PublishTrack(name string) (*MoqTrackProducer,
 	} else {
 		return FfiConverterMoqTrackProducerINSTANCE.Lift(_uniffiRV), nil
 	}
+}
+
+// Remove an untyped application section from this broadcast's catalog by name.
+//
+// A no-op if no section with that name exists. The catalog is republished automatically.
+func (_self *MoqBroadcastProducer) RemoveCatalogSection(name string) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_remove_catalog_section(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+
+// Set (or replace) an untyped application section in this broadcast's catalog.
+//
+// `value` is any JSON document (object, array, string, ...). The section lands as a
+// top-level key alongside `video`/`audio` and reaches subscribers via
+// [`MoqCatalog::extra`](crate::media::MoqCatalog). `name` must not be a reserved media
+// section (`video`/`audio`). The catalog is republished automatically.
+//
+// Use this to advertise a side-channel track (e.g. a transcript or captions track) that
+// the catalog doesn't model natively, mirroring the JS catalog's pass-through sections.
+func (_self *MoqBroadcastProducer) SetCatalogSection(name string, value string) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_set_catalog_section(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterStringINSTANCE.Lower(value), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
 }
 func (object *MoqBroadcastProducer) Destroy() {
 	runtime.SetFinalizer(object, nil)
@@ -5064,6 +5130,11 @@ type MoqCatalog struct {
 	Display  *MoqDimensions
 	Rotation *float64
 	Flip     *bool
+	// Untyped application catalog sections, keyed by section name, with each value
+	// a JSON string. These are the top-level catalog keys beyond `video`/`audio`,
+	// passed through verbatim (decode the JSON yourself). Set them on the publish
+	// side with [`set_catalog_section`](crate::producer::MoqBroadcastProducer::set_catalog_section).
+	Extra map[string]string
 }
 
 func (r *MoqCatalog) Destroy() {
@@ -5072,6 +5143,7 @@ func (r *MoqCatalog) Destroy() {
 	FfiDestroyerOptionalMoqDimensions{}.Destroy(r.Display)
 	FfiDestroyerOptionalFloat64{}.Destroy(r.Rotation)
 	FfiDestroyerOptionalBool{}.Destroy(r.Flip)
+	FfiDestroyerMapStringString{}.Destroy(r.Extra)
 }
 
 type FfiConverterMoqCatalog struct{}
@@ -5089,6 +5161,7 @@ func (c FfiConverterMoqCatalog) Read(reader io.Reader) MoqCatalog {
 		FfiConverterOptionalMoqDimensionsINSTANCE.Read(reader),
 		FfiConverterOptionalFloat64INSTANCE.Read(reader),
 		FfiConverterOptionalBoolINSTANCE.Read(reader),
+		FfiConverterMapStringStringINSTANCE.Read(reader),
 	}
 }
 
@@ -5106,6 +5179,7 @@ func (c FfiConverterMoqCatalog) Write(writer io.Writer, value MoqCatalog) {
 	FfiConverterOptionalMoqDimensionsINSTANCE.Write(writer, value.Display)
 	FfiConverterOptionalFloat64INSTANCE.Write(writer, value.Rotation)
 	FfiConverterOptionalBoolINSTANCE.Write(writer, value.Flip)
+	FfiConverterMapStringStringINSTANCE.Write(writer, value.Extra)
 }
 
 type FfiDestroyerMoqCatalog struct{}
@@ -5466,6 +5540,7 @@ var ErrMoqErrorBind = fmt.Errorf("MoqErrorBind")
 var ErrMoqErrorReject = fmt.Errorf("MoqErrorReject")
 var ErrMoqErrorAlreadyResponded = fmt.Errorf("MoqErrorAlreadyResponded")
 var ErrMoqErrorCodec = fmt.Errorf("MoqErrorCodec")
+var ErrMoqErrorJson = fmt.Errorf("MoqErrorJson")
 var ErrMoqErrorInvalidErrorCode = fmt.Errorf("MoqErrorInvalidErrorCode")
 var ErrMoqErrorUnauthorized = fmt.Errorf("MoqErrorUnauthorized")
 var ErrMoqErrorForbidden = fmt.Errorf("MoqErrorForbidden")
@@ -5757,6 +5832,27 @@ func (self MoqErrorCodec) Is(target error) bool {
 	return target == ErrMoqErrorCodec
 }
 
+// Failed to parse a JSON value, e.g. an invalid catalog section payload.
+type MoqErrorJson struct {
+	message string
+}
+
+// Failed to parse a JSON value, e.g. an invalid catalog section payload.
+func NewMoqErrorJson() *MoqError {
+	return &MoqError{err: &MoqErrorJson{}}
+}
+
+func (e MoqErrorJson) destroy() {
+}
+
+func (err MoqErrorJson) Error() string {
+	return fmt.Sprintf("Json: %s", err.message)
+}
+
+func (self MoqErrorJson) Is(target error) bool {
+	return target == ErrMoqErrorJson
+}
+
 type MoqErrorInvalidErrorCode struct {
 	message string
 }
@@ -5885,12 +5981,14 @@ func (c FfiConverterMoqError) Read(reader io.Reader) *MoqError {
 	case 15:
 		return &MoqError{&MoqErrorCodec{message}}
 	case 16:
-		return &MoqError{&MoqErrorInvalidErrorCode{message}}
+		return &MoqError{&MoqErrorJson{message}}
 	case 17:
-		return &MoqError{&MoqErrorUnauthorized{message}}
+		return &MoqError{&MoqErrorInvalidErrorCode{message}}
 	case 18:
-		return &MoqError{&MoqErrorForbidden{message}}
+		return &MoqError{&MoqErrorUnauthorized{message}}
 	case 19:
+		return &MoqError{&MoqErrorForbidden{message}}
+	case 20:
 		return &MoqError{&MoqErrorLog{message}}
 	default:
 		panic(fmt.Sprintf("Unknown error code %d in FfiConverterMoqError.Read()", errorID))
@@ -5930,14 +6028,16 @@ func (c FfiConverterMoqError) Write(writer io.Writer, value *MoqError) {
 		writeInt32(writer, 14)
 	case *MoqErrorCodec:
 		writeInt32(writer, 15)
-	case *MoqErrorInvalidErrorCode:
+	case *MoqErrorJson:
 		writeInt32(writer, 16)
-	case *MoqErrorUnauthorized:
+	case *MoqErrorInvalidErrorCode:
 		writeInt32(writer, 17)
-	case *MoqErrorForbidden:
+	case *MoqErrorUnauthorized:
 		writeInt32(writer, 18)
-	case *MoqErrorLog:
+	case *MoqErrorForbidden:
 		writeInt32(writer, 19)
+	case *MoqErrorLog:
+		writeInt32(writer, 20)
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterMoqError.Write", value))
@@ -5977,6 +6077,8 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 	case MoqErrorAlreadyResponded:
 		variantValue.destroy()
 	case MoqErrorCodec:
+		variantValue.destroy()
+	case MoqErrorJson:
 		variantValue.destroy()
 	case MoqErrorInvalidErrorCode:
 		variantValue.destroy()
@@ -6609,6 +6711,54 @@ type FfiDestroyerSequenceString struct{}
 
 func (FfiDestroyerSequenceString) Destroy(sequence []string) {
 	for _, value := range sequence {
+		FfiDestroyerString{}.Destroy(value)
+	}
+}
+
+type FfiConverterMapStringString struct{}
+
+var FfiConverterMapStringStringINSTANCE = FfiConverterMapStringString{}
+
+func (c FfiConverterMapStringString) Lift(rb RustBufferI) map[string]string {
+	return LiftFromRustBuffer[map[string]string](c, rb)
+}
+
+func (_ FfiConverterMapStringString) Read(reader io.Reader) map[string]string {
+	result := make(map[string]string)
+	length := readInt32(reader)
+	for i := int32(0); i < length; i++ {
+		key := FfiConverterStringINSTANCE.Read(reader)
+		value := FfiConverterStringINSTANCE.Read(reader)
+		result[key] = value
+	}
+	return result
+}
+
+func (c FfiConverterMapStringString) Lower(value map[string]string) C.RustBuffer {
+	return LowerIntoRustBuffer[map[string]string](c, value)
+}
+
+func (c FfiConverterMapStringString) LowerExternal(value map[string]string) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[map[string]string](c, value))
+}
+
+func (_ FfiConverterMapStringString) Write(writer io.Writer, mapValue map[string]string) {
+	if len(mapValue) > math.MaxInt32 {
+		panic("map[string]string is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(mapValue)))
+	for key, value := range mapValue {
+		FfiConverterStringINSTANCE.Write(writer, key)
+		FfiConverterStringINSTANCE.Write(writer, value)
+	}
+}
+
+type FfiDestroyerMapStringString struct{}
+
+func (_ FfiDestroyerMapStringString) Destroy(mapValue map[string]string) {
+	for key, value := range mapValue {
+		FfiDestroyerString{}.Destroy(key)
 		FfiDestroyerString{}.Destroy(value)
 	}
 }
