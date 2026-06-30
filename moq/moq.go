@@ -807,7 +807,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqmediaproducer_name()
 		})
-		if checksum != 45039 {
+		if checksum != 35932 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqmediaproducer_name: UniFFI API checksum mismatch")
 		}
@@ -816,7 +816,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqmediaproducer_unused()
 		})
-		if checksum != 45236 {
+		if checksum != 65253 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqmediaproducer_unused: UniFFI API checksum mismatch")
 		}
@@ -825,7 +825,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqmediaproducer_used()
 		})
-		if checksum != 49162 {
+		if checksum != 29546 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqmediaproducer_used: UniFFI API checksum mismatch")
 		}
@@ -3338,10 +3338,16 @@ type MoqMediaProducerInterface interface {
 	// Finish this media track and finalize encoding.
 	Finish() error
 	// Return the name of the media track.
+	//
+	// Errors for a multi-track container source, which has no single track name.
 	Name() (string, error)
 	// Wait until this media track has no active consumers.
+	//
+	// Errors for a multi-track container source, which has no single demand.
 	Unused() error
 	// Wait until this media track has at least one active consumer.
+	//
+	// Errors for a multi-track container source, which has no single demand.
 	Used() error
 	// Write a frame to this media track.
 	//
@@ -3365,6 +3371,8 @@ func (_self *MoqMediaProducer) Finish() error {
 }
 
 // Return the name of the media track.
+//
+// Errors for a multi-track container source, which has no single track name.
 func (_self *MoqMediaProducer) Name() (string, error) {
 	_pointer := _self.ffiObject.incrementPointer("*MoqMediaProducer")
 	defer _self.ffiObject.decrementPointer()
@@ -3383,6 +3391,8 @@ func (_self *MoqMediaProducer) Name() (string, error) {
 }
 
 // Wait until this media track has no active consumers.
+//
+// Errors for a multi-track container source, which has no single demand.
 func (_self *MoqMediaProducer) Unused() error {
 	_pointer := _self.ffiObject.incrementPointer("*MoqMediaProducer")
 	defer _self.ffiObject.decrementPointer()
@@ -3415,6 +3425,8 @@ func (_self *MoqMediaProducer) Unused() error {
 }
 
 // Wait until this media track has at least one active consumer.
+//
+// Errors for a multi-track container source, which has no single demand.
 func (_self *MoqMediaProducer) Used() error {
 	_pointer := _self.ffiObject.incrementPointer("*MoqMediaProducer")
 	defer _self.ffiObject.decrementPointer()
