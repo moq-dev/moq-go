@@ -1156,6 +1156,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_system_roots()
+		})
+		if checksum != 42515 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_system_roots: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqsession_cancel()
 		})
 		if checksum != 24930 {
@@ -2790,6 +2799,12 @@ type MoqClientInterface interface {
 	// Pass the paths to PEM-encoded CA certificates. An empty list restores the
 	// default behavior of using the platform's native root store.
 	SetTlsRoots(paths []string)
+	// Configure whether to also trust the platform's native root certificates.
+	//
+	// By default, system roots are trusted only when no custom roots are configured.
+	// Set this to `true` to trust system roots in addition to roots from
+	// `set_tls_roots`, or `false` to trust only custom roots.
+	SetTlsSystemRoots(systemRoots bool)
 }
 type MoqClient struct {
 	ffiObject FfiObject
@@ -2922,6 +2937,21 @@ func (_self *MoqClient) SetTlsRoots(paths []string) {
 	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
 		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_roots(
 			_pointer, FfiConverterSequenceStringINSTANCE.Lower(paths), _uniffiStatus)
+		return false
+	})
+}
+
+// Configure whether to also trust the platform's native root certificates.
+//
+// By default, system roots are trusted only when no custom roots are configured.
+// Set this to `true` to trust system roots in addition to roots from
+// `set_tls_roots`, or `false` to trust only custom roots.
+func (_self *MoqClient) SetTlsSystemRoots(systemRoots bool) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_system_roots(
+			_pointer, FfiConverterBoolINSTANCE.Lower(systemRoots), _uniffiStatus)
 		return false
 	})
 }

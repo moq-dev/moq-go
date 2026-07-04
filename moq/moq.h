@@ -1034,6 +1034,11 @@ void uniffi_moq_ffi_fn_method_moqclient_set_tls_fingerprints(uint64_t ptr, RustB
 void uniffi_moq_ffi_fn_method_moqclient_set_tls_roots(uint64_t ptr, RustBuffer paths, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_SYSTEM_ROOTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_SYSTEM_ROOTS
+void uniffi_moq_ffi_fn_method_moqclient_set_tls_system_roots(uint64_t ptr, int8_t system_roots, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQSESSION
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_CLONE_MOQSESSION
 uint64_t uniffi_moq_ffi_fn_clone_moqsession(uint64_t handle, RustCallStatus *out_status
@@ -1843,6 +1848,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_ROOTS
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_ROOTS
 uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_roots(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_SYSTEM_ROOTS
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_SYSTEM_ROOTS
+uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_system_roots(void
     
 );
 #endif
