@@ -454,6 +454,24 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_json()
+		})
+		if checksum != 39154 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_json: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_json_stream()
+		})
+		if checksum != 43927 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_json_stream: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqcatalogconsumer_cancel()
 		})
 		if checksum != 1059 {
@@ -549,6 +567,78 @@ func uniffiCheckChecksums() {
 		if checksum != 26719 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqtrackconsumer_recv_group: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonconsumer_cancel()
+		})
+		if checksum != 47765 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonconsumer_cancel: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonconsumer_next()
+		})
+		if checksum != 57166 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonconsumer_next: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonproducer_finish()
+		})
+		if checksum != 63989 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonproducer_finish: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonproducer_update()
+		})
+		if checksum != 14229 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonproducer_update: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonstreamconsumer_cancel()
+		})
+		if checksum != 60362 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonstreamconsumer_cancel: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonstreamconsumer_next()
+		})
+		if checksum != 30879 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonstreamconsumer_next: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonstreamproducer_append()
+		})
+		if checksum != 29352 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonstreamproducer_append: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqjsonstreamproducer_finish()
+		})
+		if checksum != 52088 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqjsonstreamproducer_finish: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -675,6 +765,24 @@ func uniffiCheckChecksums() {
 		if checksum != 39786 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_audio: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_json()
+		})
+		if checksum != 17834 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_json: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_json_stream()
+		})
+		if checksum != 37537 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastproducer_publish_json_stream: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -2110,6 +2218,12 @@ type MoqBroadcastConsumerInterface interface {
 	//
 	// Frames are returned as plain byte payloads with no codec or container parsing.
 	SubscribeTrack(name string) (*MoqTrackConsumer, error)
+	// Subscribe to a JSON snapshot track (lossy latest-value) by name.
+	//
+	// Pass the same [`MoqJsonConfig::compression`] the producer used.
+	SubscribeJson(name string, config MoqJsonConfig) (*MoqJsonConsumer, error)
+	// Subscribe to a JSON stream track (lossless append-log) by name.
+	SubscribeJsonStream(name string, config MoqJsonStreamConfig) (*MoqJsonStreamConsumer, error)
 }
 type MoqBroadcastConsumer struct {
 	ffiObject FfiObject
@@ -2184,6 +2298,40 @@ func (_self *MoqBroadcastConsumer) SubscribeTrack(name string) (*MoqTrackConsume
 		return _uniffiDefaultValue, _uniffiErr
 	} else {
 		return FfiConverterMoqTrackConsumerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Subscribe to a JSON snapshot track (lossy latest-value) by name.
+//
+// Pass the same [`MoqJsonConfig::compression`] the producer used.
+func (_self *MoqBroadcastConsumer) SubscribeJson(name string, config MoqJsonConfig) (*MoqJsonConsumer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastConsumer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastconsumer_subscribe_json(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqJsonConfigINSTANCE.Lower(config), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqJsonConsumer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqJsonConsumerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Subscribe to a JSON stream track (lossless append-log) by name.
+func (_self *MoqBroadcastConsumer) SubscribeJsonStream(name string, config MoqJsonStreamConfig) (*MoqJsonStreamConsumer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastConsumer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastconsumer_subscribe_json_stream(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqJsonStreamConfigINSTANCE.Lower(config), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqJsonStreamConsumer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqJsonStreamConsumerINSTANCE.Lift(_uniffiRV), nil
 	}
 }
 func (object *MoqBroadcastConsumer) Destroy() {
@@ -2361,6 +2509,13 @@ type MoqBroadcastProducerInterface interface {
 	// registered immediately so subscribers can find the track even
 	// before the first frame is written.
 	PublishAudio(name string, input MoqAudioEncoderInput, output MoqAudioEncoderOutput) (*MoqAudioProducer, error)
+	// Publish a JSON snapshot track (lossy latest-value) by name.
+	//
+	// Advertise it in the catalog yourself with
+	// [`set_catalog_section`](Self::set_catalog_section) if consumers should discover it.
+	PublishJson(name string, config MoqJsonConfig) (*MoqJsonProducer, error)
+	// Publish a JSON stream track (lossless append-log) by name.
+	PublishJsonStream(name string, config MoqJsonStreamConfig) (*MoqJsonStreamProducer, error)
 	// Create a consumer that reads from this broadcast's tracks.
 	Consume() (*MoqBroadcastConsumer, error)
 	// Create a dynamic producer that yields tracks requested by subscribers.
@@ -2441,6 +2596,41 @@ func (_self *MoqBroadcastProducer) PublishAudio(name string, input MoqAudioEncod
 		return _uniffiDefaultValue, _uniffiErr
 	} else {
 		return FfiConverterMoqAudioProducerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Publish a JSON snapshot track (lossy latest-value) by name.
+//
+// Advertise it in the catalog yourself with
+// [`set_catalog_section`](Self::set_catalog_section) if consumers should discover it.
+func (_self *MoqBroadcastProducer) PublishJson(name string, config MoqJsonConfig) (*MoqJsonProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_json(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqJsonConfigINSTANCE.Lower(config), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqJsonProducer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqJsonProducerINSTANCE.Lift(_uniffiRV), nil
+	}
+}
+
+// Publish a JSON stream track (lossless append-log) by name.
+func (_self *MoqBroadcastProducer) PublishJsonStream(name string, config MoqJsonStreamConfig) (*MoqJsonStreamProducer, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastProducer")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) C.uint64_t {
+		return C.uniffi_moq_ffi_fn_method_moqbroadcastproducer_publish_json_stream(
+			_pointer, FfiConverterStringINSTANCE.Lower(name), FfiConverterMoqJsonStreamConfigINSTANCE.Lower(config), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *MoqJsonStreamProducer
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterMoqJsonStreamProducerINSTANCE.Lift(_uniffiRV), nil
 	}
 }
 
@@ -3249,6 +3439,426 @@ func LowerToExternalMoqGroupProducer(value *MoqGroupProducer) uint64 {
 type FfiDestroyerMoqGroupProducer struct{}
 
 func (_ FfiDestroyerMoqGroupProducer) Destroy(value *MoqGroupProducer) {
+	value.Destroy()
+}
+
+// Consumes a JSON snapshot track, yielding the latest reconstructed value.
+type MoqJsonConsumerInterface interface {
+	// Cancel all current and future `next()` calls.
+	Cancel()
+	// Get the next value as a JSON string. Returns `None` once the track ends.
+	//
+	// A consumer that has fallen behind collapses the backlog and yields only the latest value.
+	Next() (*string, error)
+}
+
+// Consumes a JSON snapshot track, yielding the latest reconstructed value.
+type MoqJsonConsumer struct {
+	ffiObject FfiObject
+}
+
+// Cancel all current and future `next()` calls.
+func (_self *MoqJsonConsumer) Cancel() {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonConsumer")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonconsumer_cancel(
+			_pointer, _uniffiStatus)
+		return false
+	})
+}
+
+// Get the next value as a JSON string. Returns `None` once the track ends.
+//
+// A consumer that has fallen behind collapses the backlog and yields only the latest value.
+func (_self *MoqJsonConsumer) Next() (*string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonConsumer")
+	defer _self.ffiObject.decrementPointer()
+	res, err := uniffiRustCallAsync[*MoqError](
+		FfiConverterMoqErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_moq_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer{
+				inner: res,
+			}
+		},
+		// liftFn
+		func(ffi RustBufferI) *string {
+			return FfiConverterOptionalStringINSTANCE.Lift(ffi)
+		},
+		C.uniffi_moq_ffi_fn_method_moqjsonconsumer_next(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	if err == nil {
+		return res, nil
+	}
+
+	return res, err
+}
+func (object *MoqJsonConsumer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqJsonConsumer struct{}
+
+var FfiConverterMoqJsonConsumerINSTANCE = FfiConverterMoqJsonConsumer{}
+
+func (c FfiConverterMoqJsonConsumer) Lift(handle C.uint64_t) *MoqJsonConsumer {
+	result := &MoqJsonConsumer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqjsonconsumer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqjsonconsumer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqJsonConsumer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqJsonConsumer) Read(reader io.Reader) *MoqJsonConsumer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqJsonConsumer) Lower(value *MoqJsonConsumer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqJsonConsumer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqJsonConsumer) Write(writer io.Writer, value *MoqJsonConsumer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqJsonConsumer(handle uint64) *MoqJsonConsumer {
+	return FfiConverterMoqJsonConsumerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqJsonConsumer(value *MoqJsonConsumer) uint64 {
+	return uint64(FfiConverterMoqJsonConsumerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqJsonConsumer struct{}
+
+func (_ FfiDestroyerMoqJsonConsumer) Destroy(value *MoqJsonConsumer) {
+	value.Destroy()
+}
+
+// Publishes a JSON value that consumers see as a single latest state.
+type MoqJsonProducerInterface interface {
+	// Finish the track, closing any open group.
+	Finish() error
+	// Publish a new value, encoded as a snapshot or delta automatically. `value` is a JSON
+	// document. A no-op if unchanged from the previous update.
+	Update(value string) error
+}
+
+// Publishes a JSON value that consumers see as a single latest state.
+type MoqJsonProducer struct {
+	ffiObject FfiObject
+}
+
+// Finish the track, closing any open group.
+func (_self *MoqJsonProducer) Finish() error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonproducer_finish(
+			_pointer, _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+
+// Publish a new value, encoded as a snapshot or delta automatically. `value` is a JSON
+// document. A no-op if unchanged from the previous update.
+func (_self *MoqJsonProducer) Update(value string) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonproducer_update(
+			_pointer, FfiConverterStringINSTANCE.Lower(value), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+func (object *MoqJsonProducer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqJsonProducer struct{}
+
+var FfiConverterMoqJsonProducerINSTANCE = FfiConverterMoqJsonProducer{}
+
+func (c FfiConverterMoqJsonProducer) Lift(handle C.uint64_t) *MoqJsonProducer {
+	result := &MoqJsonProducer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqjsonproducer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqjsonproducer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqJsonProducer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqJsonProducer) Read(reader io.Reader) *MoqJsonProducer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqJsonProducer) Lower(value *MoqJsonProducer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqJsonProducer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqJsonProducer) Write(writer io.Writer, value *MoqJsonProducer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqJsonProducer(handle uint64) *MoqJsonProducer {
+	return FfiConverterMoqJsonProducerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqJsonProducer(value *MoqJsonProducer) uint64 {
+	return uint64(FfiConverterMoqJsonProducerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqJsonProducer struct{}
+
+func (_ FfiDestroyerMoqJsonProducer) Destroy(value *MoqJsonProducer) {
+	value.Destroy()
+}
+
+// Consumes an ordered log of JSON records, yielding every record in order.
+type MoqJsonStreamConsumerInterface interface {
+	// Cancel all current and future `next()` calls.
+	Cancel()
+	// Get the next record as a JSON string. Returns `None` once the track ends.
+	Next() (*string, error)
+}
+
+// Consumes an ordered log of JSON records, yielding every record in order.
+type MoqJsonStreamConsumer struct {
+	ffiObject FfiObject
+}
+
+// Cancel all current and future `next()` calls.
+func (_self *MoqJsonStreamConsumer) Cancel() {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonStreamConsumer")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonstreamconsumer_cancel(
+			_pointer, _uniffiStatus)
+		return false
+	})
+}
+
+// Get the next record as a JSON string. Returns `None` once the track ends.
+func (_self *MoqJsonStreamConsumer) Next() (*string, error) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonStreamConsumer")
+	defer _self.ffiObject.decrementPointer()
+	res, err := uniffiRustCallAsync[*MoqError](
+		FfiConverterMoqErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) RustBufferI {
+			res := C.ffi_moq_ffi_rust_future_complete_rust_buffer(handle, status)
+			return GoRustBuffer{
+				inner: res,
+			}
+		},
+		// liftFn
+		func(ffi RustBufferI) *string {
+			return FfiConverterOptionalStringINSTANCE.Lift(ffi)
+		},
+		C.uniffi_moq_ffi_fn_method_moqjsonstreamconsumer_next(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_poll_rust_buffer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_moq_ffi_rust_future_free_rust_buffer(handle)
+		},
+	)
+
+	if err == nil {
+		return res, nil
+	}
+
+	return res, err
+}
+func (object *MoqJsonStreamConsumer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqJsonStreamConsumer struct{}
+
+var FfiConverterMoqJsonStreamConsumerINSTANCE = FfiConverterMoqJsonStreamConsumer{}
+
+func (c FfiConverterMoqJsonStreamConsumer) Lift(handle C.uint64_t) *MoqJsonStreamConsumer {
+	result := &MoqJsonStreamConsumer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqjsonstreamconsumer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqjsonstreamconsumer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqJsonStreamConsumer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqJsonStreamConsumer) Read(reader io.Reader) *MoqJsonStreamConsumer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqJsonStreamConsumer) Lower(value *MoqJsonStreamConsumer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqJsonStreamConsumer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqJsonStreamConsumer) Write(writer io.Writer, value *MoqJsonStreamConsumer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqJsonStreamConsumer(handle uint64) *MoqJsonStreamConsumer {
+	return FfiConverterMoqJsonStreamConsumerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqJsonStreamConsumer(value *MoqJsonStreamConsumer) uint64 {
+	return uint64(FfiConverterMoqJsonStreamConsumerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqJsonStreamConsumer struct{}
+
+func (_ FfiDestroyerMoqJsonStreamConsumer) Destroy(value *MoqJsonStreamConsumer) {
+	value.Destroy()
+}
+
+// Publishes an ordered log of JSON records, one record per append.
+type MoqJsonStreamProducerInterface interface {
+	// Append one record to the log. `value` is a JSON document.
+	Append(value string) error
+	// Finish the track, closing the group.
+	Finish() error
+}
+
+// Publishes an ordered log of JSON records, one record per append.
+type MoqJsonStreamProducer struct {
+	ffiObject FfiObject
+}
+
+// Append one record to the log. `value` is a JSON document.
+func (_self *MoqJsonStreamProducer) Append(value string) error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonStreamProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonstreamproducer_append(
+			_pointer, FfiConverterStringINSTANCE.Lower(value), _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+
+// Finish the track, closing the group.
+func (_self *MoqJsonStreamProducer) Finish() error {
+	_pointer := _self.ffiObject.incrementPointer("*MoqJsonStreamProducer")
+	defer _self.ffiObject.decrementPointer()
+	_, _uniffiErr := rustCallWithError[*MoqError](FfiConverterMoqError{}, func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqjsonstreamproducer_finish(
+			_pointer, _uniffiStatus)
+		return false
+	})
+	return _uniffiErr.AsError()
+}
+func (object *MoqJsonStreamProducer) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterMoqJsonStreamProducer struct{}
+
+var FfiConverterMoqJsonStreamProducerINSTANCE = FfiConverterMoqJsonStreamProducer{}
+
+func (c FfiConverterMoqJsonStreamProducer) Lift(handle C.uint64_t) *MoqJsonStreamProducer {
+	result := &MoqJsonStreamProducer{
+		newFfiObject(
+			handle,
+			func(handle C.uint64_t, status *C.RustCallStatus) C.uint64_t {
+				return C.uniffi_moq_ffi_fn_clone_moqjsonstreamproducer(handle, status)
+			},
+			func(handle C.uint64_t, status *C.RustCallStatus) {
+				C.uniffi_moq_ffi_fn_free_moqjsonstreamproducer(handle, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*MoqJsonStreamProducer).Destroy)
+	return result
+}
+
+func (c FfiConverterMoqJsonStreamProducer) Read(reader io.Reader) *MoqJsonStreamProducer {
+	return c.Lift(C.uint64_t(readUint64(reader)))
+}
+
+func (c FfiConverterMoqJsonStreamProducer) Lower(value *MoqJsonStreamProducer) C.uint64_t {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the handle will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked handle.
+	handle := value.ffiObject.incrementPointer("*MoqJsonStreamProducer")
+	defer value.ffiObject.decrementPointer()
+	return handle
+}
+
+func (c FfiConverterMoqJsonStreamProducer) Write(writer io.Writer, value *MoqJsonStreamProducer) {
+	writeUint64(writer, uint64(c.Lower(value)))
+}
+
+func LiftFromExternalMoqJsonStreamProducer(handle uint64) *MoqJsonStreamProducer {
+	return FfiConverterMoqJsonStreamProducerINSTANCE.Lift(C.uint64_t(handle))
+}
+
+func LowerToExternalMoqJsonStreamProducer(value *MoqJsonStreamProducer) uint64 {
+	return uint64(FfiConverterMoqJsonStreamProducerINSTANCE.Lower(value))
+}
+
+type FfiDestroyerMoqJsonStreamProducer struct{}
+
+func (_ FfiDestroyerMoqJsonStreamProducer) Destroy(value *MoqJsonStreamProducer) {
 	value.Destroy()
 }
 
@@ -5346,6 +5956,102 @@ func (_ FfiDestroyerMoqFrame) Destroy(value MoqFrame) {
 	value.Destroy()
 }
 
+// Options for a JSON snapshot track (lossy latest-value mode).
+//
+// The same config is passed to both the producer and the consumer, but the consumer reads only
+// [`compression`](Self::compression); [`delta_ratio`](Self::delta_ratio) is producer-only.
+type MoqJsonConfig struct {
+	// How aggressively the producer emits deltas instead of full snapshots. `0` disables deltas
+	// (one snapshot per group); a positive value allows roughly that many snapshots' worth of
+	// deltas before rolling a new group. Ignored by the consumer.
+	DeltaRatio uint32
+	// DEFLATE-compress each group. Must match on the producer and consumer.
+	Compression bool
+}
+
+func (r *MoqJsonConfig) Destroy() {
+	FfiDestroyerUint32{}.Destroy(r.DeltaRatio)
+	FfiDestroyerBool{}.Destroy(r.Compression)
+}
+
+type FfiConverterMoqJsonConfig struct{}
+
+var FfiConverterMoqJsonConfigINSTANCE = FfiConverterMoqJsonConfig{}
+
+func (c FfiConverterMoqJsonConfig) Lift(rb RustBufferI) MoqJsonConfig {
+	return LiftFromRustBuffer[MoqJsonConfig](c, rb)
+}
+
+func (c FfiConverterMoqJsonConfig) Read(reader io.Reader) MoqJsonConfig {
+	return MoqJsonConfig{
+		FfiConverterUint32INSTANCE.Read(reader),
+		FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqJsonConfig) Lower(value MoqJsonConfig) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqJsonConfig](c, value)
+}
+
+func (c FfiConverterMoqJsonConfig) LowerExternal(value MoqJsonConfig) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqJsonConfig](c, value))
+}
+
+func (c FfiConverterMoqJsonConfig) Write(writer io.Writer, value MoqJsonConfig) {
+	FfiConverterUint32INSTANCE.Write(writer, value.DeltaRatio)
+	FfiConverterBoolINSTANCE.Write(writer, value.Compression)
+}
+
+type FfiDestroyerMoqJsonConfig struct{}
+
+func (_ FfiDestroyerMoqJsonConfig) Destroy(value MoqJsonConfig) {
+	value.Destroy()
+}
+
+// Options for a JSON stream track (lossless append-log mode).
+//
+// The same config is passed to both the producer and the consumer.
+type MoqJsonStreamConfig struct {
+	// DEFLATE-compress the group. Must match on the producer and consumer.
+	Compression bool
+}
+
+func (r *MoqJsonStreamConfig) Destroy() {
+	FfiDestroyerBool{}.Destroy(r.Compression)
+}
+
+type FfiConverterMoqJsonStreamConfig struct{}
+
+var FfiConverterMoqJsonStreamConfigINSTANCE = FfiConverterMoqJsonStreamConfig{}
+
+func (c FfiConverterMoqJsonStreamConfig) Lift(rb RustBufferI) MoqJsonStreamConfig {
+	return LiftFromRustBuffer[MoqJsonStreamConfig](c, rb)
+}
+
+func (c FfiConverterMoqJsonStreamConfig) Read(reader io.Reader) MoqJsonStreamConfig {
+	return MoqJsonStreamConfig{
+		FfiConverterBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterMoqJsonStreamConfig) Lower(value MoqJsonStreamConfig) C.RustBuffer {
+	return LowerIntoRustBuffer[MoqJsonStreamConfig](c, value)
+}
+
+func (c FfiConverterMoqJsonStreamConfig) LowerExternal(value MoqJsonStreamConfig) ExternalCRustBuffer {
+	return RustBufferFromC(LowerIntoRustBuffer[MoqJsonStreamConfig](c, value))
+}
+
+func (c FfiConverterMoqJsonStreamConfig) Write(writer io.Writer, value MoqJsonStreamConfig) {
+	FfiConverterBoolINSTANCE.Write(writer, value.Compression)
+}
+
+type FfiDestroyerMoqJsonStreamConfig struct{}
+
+func (_ FfiDestroyerMoqJsonStreamConfig) Destroy(value MoqJsonStreamConfig) {
+	value.Destroy()
+}
+
 type MoqVideo struct {
 	Codec        string
 	Description  *[]byte
@@ -5593,6 +6299,7 @@ func (err MoqError) Unwrap() error {
 var ErrMoqErrorProtocol = fmt.Errorf("MoqErrorProtocol")
 var ErrMoqErrorMedia = fmt.Errorf("MoqErrorMedia")
 var ErrMoqErrorMux = fmt.Errorf("MoqErrorMux")
+var ErrMoqErrorJsonTrack = fmt.Errorf("MoqErrorJsonTrack")
 var ErrMoqErrorAudio = fmt.Errorf("MoqErrorAudio")
 var ErrMoqErrorUrl = fmt.Errorf("MoqErrorUrl")
 var ErrMoqErrorTimeOverflow = fmt.Errorf("MoqErrorTimeOverflow")
@@ -5667,6 +6374,25 @@ func (err MoqErrorMux) Error() string {
 
 func (self MoqErrorMux) Is(target error) bool {
 	return target == ErrMoqErrorMux
+}
+
+type MoqErrorJsonTrack struct {
+	message string
+}
+
+func NewMoqErrorJsonTrack() *MoqError {
+	return &MoqError{err: &MoqErrorJsonTrack{}}
+}
+
+func (e MoqErrorJsonTrack) destroy() {
+}
+
+func (err MoqErrorJsonTrack) Error() string {
+	return fmt.Sprintf("JsonTrack: %s", err.message)
+}
+
+func (self MoqErrorJsonTrack) Is(target error) bool {
+	return target == ErrMoqErrorJsonTrack
 }
 
 type MoqErrorAudio struct {
@@ -6022,38 +6748,40 @@ func (c FfiConverterMoqError) Read(reader io.Reader) *MoqError {
 	case 3:
 		return &MoqError{&MoqErrorMux{message}}
 	case 4:
-		return &MoqError{&MoqErrorAudio{message}}
+		return &MoqError{&MoqErrorJsonTrack{message}}
 	case 5:
-		return &MoqError{&MoqErrorUrl{message}}
+		return &MoqError{&MoqErrorAudio{message}}
 	case 6:
-		return &MoqError{&MoqErrorTimeOverflow{message}}
+		return &MoqError{&MoqErrorUrl{message}}
 	case 7:
-		return &MoqError{&MoqErrorLogLevel{message}}
+		return &MoqError{&MoqErrorTimeOverflow{message}}
 	case 8:
-		return &MoqError{&MoqErrorTask{message}}
+		return &MoqError{&MoqErrorLogLevel{message}}
 	case 9:
-		return &MoqError{&MoqErrorCancelled{message}}
+		return &MoqError{&MoqErrorTask{message}}
 	case 10:
-		return &MoqError{&MoqErrorClosed{message}}
+		return &MoqError{&MoqErrorCancelled{message}}
 	case 11:
-		return &MoqError{&MoqErrorConnect{message}}
+		return &MoqError{&MoqErrorClosed{message}}
 	case 12:
-		return &MoqError{&MoqErrorBind{message}}
+		return &MoqError{&MoqErrorConnect{message}}
 	case 13:
-		return &MoqError{&MoqErrorReject{message}}
+		return &MoqError{&MoqErrorBind{message}}
 	case 14:
-		return &MoqError{&MoqErrorAlreadyResponded{message}}
+		return &MoqError{&MoqErrorReject{message}}
 	case 15:
-		return &MoqError{&MoqErrorCodec{message}}
+		return &MoqError{&MoqErrorAlreadyResponded{message}}
 	case 16:
-		return &MoqError{&MoqErrorJson{message}}
+		return &MoqError{&MoqErrorCodec{message}}
 	case 17:
-		return &MoqError{&MoqErrorInvalidErrorCode{message}}
+		return &MoqError{&MoqErrorJson{message}}
 	case 18:
-		return &MoqError{&MoqErrorUnauthorized{message}}
+		return &MoqError{&MoqErrorInvalidErrorCode{message}}
 	case 19:
-		return &MoqError{&MoqErrorForbidden{message}}
+		return &MoqError{&MoqErrorUnauthorized{message}}
 	case 20:
+		return &MoqError{&MoqErrorForbidden{message}}
+	case 21:
 		return &MoqError{&MoqErrorLog{message}}
 	default:
 		panic(fmt.Sprintf("Unknown error code %d in FfiConverterMoqError.Read()", errorID))
@@ -6069,40 +6797,42 @@ func (c FfiConverterMoqError) Write(writer io.Writer, value *MoqError) {
 		writeInt32(writer, 2)
 	case *MoqErrorMux:
 		writeInt32(writer, 3)
-	case *MoqErrorAudio:
+	case *MoqErrorJsonTrack:
 		writeInt32(writer, 4)
-	case *MoqErrorUrl:
+	case *MoqErrorAudio:
 		writeInt32(writer, 5)
-	case *MoqErrorTimeOverflow:
+	case *MoqErrorUrl:
 		writeInt32(writer, 6)
-	case *MoqErrorLogLevel:
+	case *MoqErrorTimeOverflow:
 		writeInt32(writer, 7)
-	case *MoqErrorTask:
+	case *MoqErrorLogLevel:
 		writeInt32(writer, 8)
-	case *MoqErrorCancelled:
+	case *MoqErrorTask:
 		writeInt32(writer, 9)
-	case *MoqErrorClosed:
+	case *MoqErrorCancelled:
 		writeInt32(writer, 10)
-	case *MoqErrorConnect:
+	case *MoqErrorClosed:
 		writeInt32(writer, 11)
-	case *MoqErrorBind:
+	case *MoqErrorConnect:
 		writeInt32(writer, 12)
-	case *MoqErrorReject:
+	case *MoqErrorBind:
 		writeInt32(writer, 13)
-	case *MoqErrorAlreadyResponded:
+	case *MoqErrorReject:
 		writeInt32(writer, 14)
-	case *MoqErrorCodec:
+	case *MoqErrorAlreadyResponded:
 		writeInt32(writer, 15)
-	case *MoqErrorJson:
+	case *MoqErrorCodec:
 		writeInt32(writer, 16)
-	case *MoqErrorInvalidErrorCode:
+	case *MoqErrorJson:
 		writeInt32(writer, 17)
-	case *MoqErrorUnauthorized:
+	case *MoqErrorInvalidErrorCode:
 		writeInt32(writer, 18)
-	case *MoqErrorForbidden:
+	case *MoqErrorUnauthorized:
 		writeInt32(writer, 19)
-	case *MoqErrorLog:
+	case *MoqErrorForbidden:
 		writeInt32(writer, 20)
+	case *MoqErrorLog:
+		writeInt32(writer, 21)
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterMoqError.Write", value))
@@ -6118,6 +6848,8 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 	case MoqErrorMedia:
 		variantValue.destroy()
 	case MoqErrorMux:
+		variantValue.destroy()
+	case MoqErrorJsonTrack:
 		variantValue.destroy()
 	case MoqErrorAudio:
 		variantValue.destroy()
