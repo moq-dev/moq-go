@@ -1237,6 +1237,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_cert()
+		})
+		if checksum != 45194 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_cert: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_disable_verify()
 		})
 		if checksum != 17397 {
@@ -1251,6 +1260,15 @@ func uniffiCheckChecksums() {
 		if checksum != 55328 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_moq_ffi_checksum_method_moqclient_set_tls_key()
+		})
+		if checksum != 13628 {
+			// If this happens try cleaning and rebuilding your project
+			panic("moq: uniffi_moq_ffi_checksum_method_moqclient_set_tls_key: UniFFI API checksum mismatch")
 		}
 	}
 	{
@@ -2975,6 +2993,12 @@ type MoqClientInterface interface {
 	SetConsume(origin **MoqOriginProducer)
 	// Set the origin to publish local broadcasts to the remote.
 	SetPublish(origin **MoqOriginProducer)
+	// Present this PEM certificate chain when the relay requires mTLS.
+	//
+	// Only certificates are read from the file; any private keys are ignored. Must be
+	// paired with `set_tls_key`, otherwise `connect` fails with an incomplete-auth error.
+	// Pass `None` to clear a previously set path.
+	SetTlsCert(path *string)
 	// Disable TLS certificate verification (for development only).
 	SetTlsDisableVerify(disable bool)
 	// Pin the peer to a certificate with one of these SHA-256 fingerprints, encoded as hex.
@@ -2984,6 +3008,12 @@ type MoqClientInterface interface {
 	// to trust a self-signed certificate without disabling verification. An empty list clears
 	// any pinned fingerprints.
 	SetTlsFingerprints(fingerprints []string)
+	// Present this PEM private key when the relay requires mTLS.
+	//
+	// Only the private key is read from the file; any certificates are ignored. Must be
+	// paired with `set_tls_cert`, otherwise `connect` fails with an incomplete-auth error.
+	// Pass `None` to clear a previously set path.
+	SetTlsKey(path *string)
 	// Trust these PEM root certificate file(s) instead of the system roots.
 	//
 	// Pass the paths to PEM-encoded CA certificates. An empty list restores the
@@ -3090,6 +3120,21 @@ func (_self *MoqClient) SetPublish(origin **MoqOriginProducer) {
 	})
 }
 
+// Present this PEM certificate chain when the relay requires mTLS.
+//
+// Only certificates are read from the file; any private keys are ignored. Must be
+// paired with `set_tls_key`, otherwise `connect` fails with an incomplete-auth error.
+// Pass `None` to clear a previously set path.
+func (_self *MoqClient) SetTlsCert(path *string) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_cert(
+			_pointer, FfiConverterOptionalStringINSTANCE.Lower(path), _uniffiStatus)
+		return false
+	})
+}
+
 // Disable TLS certificate verification (for development only).
 func (_self *MoqClient) SetTlsDisableVerify(disable bool) {
 	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
@@ -3113,6 +3158,21 @@ func (_self *MoqClient) SetTlsFingerprints(fingerprints []string) {
 	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
 		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_fingerprints(
 			_pointer, FfiConverterSequenceStringINSTANCE.Lower(fingerprints), _uniffiStatus)
+		return false
+	})
+}
+
+// Present this PEM private key when the relay requires mTLS.
+//
+// Only the private key is read from the file; any certificates are ignored. Must be
+// paired with `set_tls_cert`, otherwise `connect` fails with an incomplete-auth error.
+// Pass `None` to clear a previously set path.
+func (_self *MoqClient) SetTlsKey(path *string) {
+	_pointer := _self.ffiObject.incrementPointer("*MoqClient")
+	defer _self.ffiObject.decrementPointer()
+	rustCall(func(_uniffiStatus *C.RustCallStatus) bool {
+		C.uniffi_moq_ffi_fn_method_moqclient_set_tls_key(
+			_pointer, FfiConverterOptionalStringINSTANCE.Lower(path), _uniffiStatus)
 		return false
 	})
 }

@@ -1119,6 +1119,11 @@ void uniffi_moq_ffi_fn_method_moqclient_set_consume(uint64_t ptr, RustBuffer ori
 void uniffi_moq_ffi_fn_method_moqclient_set_publish(uint64_t ptr, RustBuffer origin, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_CERT
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_CERT
+void uniffi_moq_ffi_fn_method_moqclient_set_tls_cert(uint64_t ptr, RustBuffer path, RustCallStatus *out_status
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 void uniffi_moq_ffi_fn_method_moqclient_set_tls_disable_verify(uint64_t ptr, int8_t disable, RustCallStatus *out_status
@@ -1127,6 +1132,11 @@ void uniffi_moq_ffi_fn_method_moqclient_set_tls_disable_verify(uint64_t ptr, int
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
 void uniffi_moq_ffi_fn_method_moqclient_set_tls_fingerprints(uint64_t ptr, RustBuffer fingerprints, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_KEY
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_KEY
+void uniffi_moq_ffi_fn_method_moqclient_set_tls_key(uint64_t ptr, RustBuffer path, RustCallStatus *out_status
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_FN_METHOD_MOQCLIENT_SET_TLS_ROOTS
@@ -2005,6 +2015,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_publish(void
     
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_CERT
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_CERT
+uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_cert(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_DISABLE_VERIFY
 uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_disable_verify(void
@@ -2014,6 +2030,12 @@ uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_disable_verify(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
 #define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_FINGERPRINTS
 uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_fingerprints(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_KEY
+#define UNIFFI_FFIDEF_UNIFFI_MOQ_FFI_CHECKSUM_METHOD_MOQCLIENT_SET_TLS_KEY
+uint16_t uniffi_moq_ffi_checksum_method_moqclient_set_tls_key(void
     
 );
 #endif
