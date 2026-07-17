@@ -420,7 +420,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_audio()
 		})
-		if checksum != 16924 {
+		if checksum != 52721 {
 			// If this happens try cleaning and rebuilding your project
 			panic("moq: uniffi_moq_ffi_checksum_method_moqbroadcastconsumer_subscribe_audio: UniFFI API checksum mismatch")
 		}
@@ -2220,10 +2220,10 @@ func (_ FfiDestroyerMoqAudioProducer) Destroy(value *MoqAudioProducer) {
 }
 
 type MoqBroadcastConsumerInterface interface {
-	// Subscribe to an audio track. `catalog_audio_config` comes from
+	// Subscribe to an audio track. `catalog_audio` comes from
 	// the catalog (see
 	// [`MoqCatalogConsumer::next`](crate::consumer::MoqCatalogConsumer::next));
-	// the codec is inferred from it.
+	// the codec is inferred from it. Only Opus is currently supported.
 	SubscribeAudio(name string, catalogAudio MoqAudio, output MoqAudioDecoderOutput) (*MoqAudioConsumer, error)
 	// Subscribe to the catalog for this broadcast.
 	SubscribeCatalog() (*MoqCatalogConsumer, error)
@@ -2247,10 +2247,10 @@ type MoqBroadcastConsumer struct {
 	ffiObject FfiObject
 }
 
-// Subscribe to an audio track. `catalog_audio_config` comes from
+// Subscribe to an audio track. `catalog_audio` comes from
 // the catalog (see
 // [`MoqCatalogConsumer::next`](crate::consumer::MoqCatalogConsumer::next));
-// the codec is inferred from it.
+// the codec is inferred from it. Only Opus is currently supported.
 func (_self *MoqBroadcastConsumer) SubscribeAudio(name string, catalogAudio MoqAudio, output MoqAudioDecoderOutput) (*MoqAudioConsumer, error) {
 	_pointer := _self.ffiObject.incrementPointer("*MoqBroadcastConsumer")
 	defer _self.ffiObject.decrementPointer()
@@ -6376,6 +6376,7 @@ var ErrMoqErrorJson = fmt.Errorf("MoqErrorJson")
 var ErrMoqErrorInvalidErrorCode = fmt.Errorf("MoqErrorInvalidErrorCode")
 var ErrMoqErrorUnauthorized = fmt.Errorf("MoqErrorUnauthorized")
 var ErrMoqErrorForbidden = fmt.Errorf("MoqErrorForbidden")
+var ErrMoqErrorUnsupported = fmt.Errorf("MoqErrorUnsupported")
 var ErrMoqErrorLog = fmt.Errorf("MoqErrorLog")
 
 // Variant structs
@@ -6761,6 +6762,27 @@ func (self MoqErrorForbidden) Is(target error) bool {
 	return target == ErrMoqErrorForbidden
 }
 
+// The requested operation is not supported.
+type MoqErrorUnsupported struct {
+	message string
+}
+
+// The requested operation is not supported.
+func NewMoqErrorUnsupported() *MoqError {
+	return &MoqError{err: &MoqErrorUnsupported{}}
+}
+
+func (e MoqErrorUnsupported) destroy() {
+}
+
+func (err MoqErrorUnsupported) Error() string {
+	return fmt.Sprintf("Unsupported: %s", err.message)
+}
+
+func (self MoqErrorUnsupported) Is(target error) bool {
+	return target == ErrMoqErrorUnsupported
+}
+
 type MoqErrorLog struct {
 	message string
 }
@@ -6842,6 +6864,8 @@ func (c FfiConverterMoqError) Read(reader io.Reader) *MoqError {
 	case 20:
 		return &MoqError{&MoqErrorForbidden{message}}
 	case 21:
+		return &MoqError{&MoqErrorUnsupported{message}}
+	case 22:
 		return &MoqError{&MoqErrorLog{message}}
 	default:
 		panic(fmt.Sprintf("Unknown error code %d in FfiConverterMoqError.Read()", errorID))
@@ -6891,8 +6915,10 @@ func (c FfiConverterMoqError) Write(writer io.Writer, value *MoqError) {
 		writeInt32(writer, 19)
 	case *MoqErrorForbidden:
 		writeInt32(writer, 20)
-	case *MoqErrorLog:
+	case *MoqErrorUnsupported:
 		writeInt32(writer, 21)
+	case *MoqErrorLog:
+		writeInt32(writer, 22)
 	default:
 		_ = variantValue
 		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterMoqError.Write", value))
@@ -6942,6 +6968,8 @@ func (_ FfiDestroyerMoqError) Destroy(value *MoqError) {
 	case MoqErrorUnauthorized:
 		variantValue.destroy()
 	case MoqErrorForbidden:
+		variantValue.destroy()
+	case MoqErrorUnsupported:
 		variantValue.destroy()
 	case MoqErrorLog:
 		variantValue.destroy()
