@@ -6,4 +6,4 @@ go 1.23
 // time by go/scripts/package-wrapper.sh to the latest published moq-go-ffi, and
 // `just go check` injects a local `replace` to the freshly-generated bindings.
 // Do not "fix" this by hand or add a replace directive to the committed file.
-require github.com/moq-dev/moq-go-ffi v0.3.13
+require github.com/moq-dev/moq-go-ffi v0.3.14
