@@ -1,2 +1,2 @@
-github.com/moq-dev/moq-go-ffi v0.3.19 h1:V96OxZ+4Dnv0BL0A66kY/HpLv/0OL96p/qZXXbNwU2I=
-github.com/moq-dev/moq-go-ffi v0.3.19/go.mod h1:zxpOlUetvaoxWBnbXTdILtLLUytaoVuLvO36lftwWO0=
+moq.dev/moq-ffi v0.4.0 h1:9wY0GSiYM+BWcHuGr9LetMVxlH6XzRwZHC2p0bQCgCk=
+moq.dev/moq-ffi v0.4.0/go.mod h1:a+uEvcnNtY3e9T4/3UqjHBnyYHNLY8rZp+/m7tmL5n8=

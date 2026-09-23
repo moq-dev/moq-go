@@ -5,32 +5,52 @@ import (
 	"errors"
 	"iter"
 
-	ffi "github.com/moq-dev/moq-go-ffi/moq"
+	ffi "moq.dev/moq-ffi/moq"
 )
 
-// MediaOption configures media tracks published by a BroadcastProducer.
-type MediaOption func(*mediaConfig)
+// AudioOption configures an audio publish.
+type AudioOption func(*ffi.MoqAudioInit)
 
-type mediaConfig struct {
-	video *VideoHint
-}
+// VideoOption configures a video publish.
+type VideoOption func(*ffi.MoqVideoInit)
 
 var errNilTrackRequest = errors.New("moq: nil track request")
 
-// WithVideoHint seeds catalog fields that a video stream cannot reveal itself.
-func WithVideoHint(hint VideoHint) MediaOption {
-	return func(c *mediaConfig) {
-		h := hint
-		c.video = &h
+// WithAudioLabel sets the human-readable rendition name stored in the catalog.
+func WithAudioLabel(label string) AudioOption {
+	return func(init *ffi.MoqAudioInit) {
+		init.Label = &label
 	}
 }
 
-func mediaInit(format string, init []byte, opts []MediaOption) ffi.MoqInit {
-	var cfg mediaConfig
+// WithVideoLabel sets the human-readable rendition name stored in the catalog.
+func WithVideoLabel(label string) VideoOption {
+	return func(init *ffi.MoqVideoInit) {
+		init.Label = &label
+	}
+}
+
+// WithVideoHint seeds catalog fields that a video stream cannot reveal itself.
+func WithVideoHint(hint VideoHint) VideoOption {
+	return func(init *ffi.MoqVideoInit) {
+		init.Hint = &hint
+	}
+}
+
+func audioInit(format AudioFormat, init []byte, opts []AudioOption) ffi.MoqAudioInit {
+	cfg := ffi.MoqAudioInit{Format: format, Data: init}
 	for _, opt := range opts {
 		opt(&cfg)
 	}
-	return ffi.MoqInit{Format: format, Data: init, Video: cfg.video}
+	return cfg
+}
+
+func videoInit(format VideoFormat, init []byte, opts []VideoOption) ffi.MoqVideoInit {
+	cfg := ffi.MoqVideoInit{Format: format, Data: init}
+	for _, opt := range opts {
+		opt(&cfg)
+	}
+	return cfg
 }
 
 // BroadcastProducer publishes a collection of tracks. Create one at a path with
@@ -60,20 +80,17 @@ func (b *BroadcastProducer) Dynamic() (*BroadcastDynamic, error) {
 	return &BroadcastDynamic{inner: inner}, nil
 }
 
-// SetRoute sets the broadcast's route: the hop chain, cost, and liveness it
-// advertises. Use it as conditions shift (e.g. a standby transcoder lowering
-// its cost once warm); consumers observe the change via RouteUpdates.
-func (b *BroadcastProducer) SetRoute(route Route) error {
-	return b.inner.SetRoute(route)
+// Announce advertises this broadcast's exact path as a route.
+//
+// Announcing again re-prices the route in place. The path is already
+// discoverable locally; Announce advertises it to peers.
+func (b *BroadcastProducer) Announce(route Route) error {
+	return b.inner.Announce(route)
 }
 
-// SetAnnounce sets whether the broadcast is announced, keeping the rest of its route.
-//
-// The origin announces the path only while the broadcast is announced; a unannounced
-// broadcast stays reachable by exact path for subscribes and fetches. This is
-// how a publisher goes on and off the air without tearing down the broadcast.
-func (b *BroadcastProducer) SetAnnounce(live bool) error {
-	return b.inner.SetAnnounce(live)
+// Unannounce withdraws peer advertising while preserving local discovery.
+func (b *BroadcastProducer) Unannounce() error {
+	return b.inner.Unannounce()
 }
 
 // SetVideoProperties replaces the catalog properties shared by every video rendition.
@@ -81,56 +98,113 @@ func (b *BroadcastProducer) SetVideoProperties(properties VideoProperties) error
 	return b.inner.SetVideoProperties(properties)
 }
 
-// PublishMedia publishes a media track from an init segment, fed frame by
-// frame with explicit timestamps.
-func (b *BroadcastProducer) PublishMedia(format string, init []byte, opts ...MediaOption) (*MediaProducer, error) {
-	inner, err := b.inner.PublishMedia(mediaInit(format, init, opts))
+// PublishAudio publishes one audio codec as a new track, fed frame by frame with
+// explicit timestamps. init carries the codec init bytes, which audio requires.
+func (b *BroadcastProducer) PublishAudio(format AudioFormat, init []byte, opts ...AudioOption) (*MediaProducer, error) {
+	inner, err := b.inner.PublishAudio(audioInit(format, init, opts))
 	if err != nil {
 		return nil, err
 	}
 	return &MediaProducer{inner: inner}, nil
 }
 
-// PublishMediaOnTrack publishes media onto a subscriber-requested track.
-func (b *BroadcastProducer) PublishMediaOnTrack(request *TrackRequest, format string, init []byte, opts ...MediaOption) (*MediaProducer, error) {
+// PublishVideo publishes one video codec as a new track. init may be nil for a
+// format that resolves in band.
+func (b *BroadcastProducer) PublishVideo(format VideoFormat, init []byte, opts ...VideoOption) (*MediaProducer, error) {
+	inner, err := b.inner.PublishVideo(videoInit(format, init, opts))
+	if err != nil {
+		return nil, err
+	}
+	return &MediaProducer{inner: inner}, nil
+}
+
+// PublishContainer publishes a container, which demuxes and publishes its own
+// tracks. There is no label or hint: a container describes each track itself.
+func (b *BroadcastProducer) PublishContainer(format ContainerFormat, init []byte) (*ContainerProducer, error) {
+	inner, err := b.inner.PublishContainer(ffi.MoqContainerInit{Format: format, Data: init})
+	if err != nil {
+		return nil, err
+	}
+	return &ContainerProducer{inner: inner}, nil
+}
+
+// PublishAudioOnTrack publishes one audio codec onto a subscriber-requested track.
+func (b *BroadcastProducer) PublishAudioOnTrack(request *TrackRequest, format AudioFormat, init []byte, opts ...AudioOption) (*MediaProducer, error) {
 	if request == nil {
 		return nil, errNilTrackRequest
 	}
-	inner, err := b.inner.PublishMediaOnTrack(request.inner, mediaInit(format, init, opts))
+	inner, err := b.inner.PublishAudioOnTrack(request.inner, audioInit(format, init, opts))
 	if err != nil {
 		return nil, err
 	}
 	return &MediaProducer{inner: inner}, nil
 }
 
-// PublishMediaStream publishes a media track fed by a raw byte stream with
-// unknown frame boundaries (e.g. Annex-B H.264). format is a stream format:
-// avc3, hev1, av01, fmp4, or mkv.
-func (b *BroadcastProducer) PublishMediaStream(format string, opts ...MediaOption) (*MediaStreamProducer, error) {
-	inner, err := b.inner.PublishMediaStream(mediaInit(format, nil, opts))
+// PublishVideoOnTrack publishes one video codec onto a subscriber-requested track.
+func (b *BroadcastProducer) PublishVideoOnTrack(request *TrackRequest, format VideoFormat, init []byte, opts ...VideoOption) (*MediaProducer, error) {
+	if request == nil {
+		return nil, errNilTrackRequest
+	}
+	inner, err := b.inner.PublishVideoOnTrack(request.inner, videoInit(format, init, opts))
+	if err != nil {
+		return nil, err
+	}
+	return &MediaProducer{inner: inner}, nil
+}
+
+// PublishVideoStream publishes a video track fed by a raw byte stream with
+// unknown frame boundaries (e.g. Annex-B H.264). Only the self-delimiting
+// formats work: Avc3, Hev1, Av01. Audio has no counterpart, having no frame
+// boundaries to infer.
+func (b *BroadcastProducer) PublishVideoStream(format VideoFormat, opts ...VideoOption) (*MediaStreamProducer, error) {
+	inner, err := b.inner.PublishVideoStream(videoInit(format, nil, opts))
 	if err != nil {
 		return nil, err
 	}
 	return &MediaStreamProducer{inner: inner}, nil
 }
 
-// PublishAudio publishes a raw-audio track with an in-process Opus encoder.
-func (b *BroadcastProducer) PublishAudio(name string, input AudioEncoderInput, output AudioEncoderOutput) (*AudioProducer, error) {
-	inner, err := b.inner.PublishAudio(name, input, output)
+// PublishContainerStream publishes a container fed by a raw byte stream, which
+// recovers its own framing.
+func (b *BroadcastProducer) PublishContainerStream(format ContainerFormat) (*ContainerStreamProducer, error) {
+	inner, err := b.inner.PublishContainerStream(format)
+	if err != nil {
+		return nil, err
+	}
+	return &ContainerStreamProducer{inner: inner}, nil
+}
+
+// EncodeAudio publishes a raw-audio track with an in-process encoder.
+//
+// Select the codec with OpusAudioCodec (currently the only constructor).
+// Pass bandwidth to reserve this track's bitrate against the session's
+// allocator so a co-resident video encoder sizes itself against what is left.
+func (b *BroadcastProducer) EncodeAudio(name string, input AudioEncoderInput, output AudioEncoderOutput, bandwidth *Bandwidth) (*AudioProducer, error) {
+	var innerBw **ffi.MoqBandwidth
+	if bandwidth != nil {
+		innerBw = &bandwidth.inner
+	}
+	inner, err := b.inner.EncodeAudio(name, input, output, innerBw)
 	if err != nil {
 		return nil, err
 	}
 	return &AudioProducer{inner: inner}, nil
 }
 
-// PublishVideo publishes a raw-video track with an in-process H.264/H.265
+// EncodeVideo publishes a raw-video track with an in-process H.264/H.265
 // encoder.
 //
 // Set output.Track to choose the track name; otherwise one is derived from the
 // codec (.avc3 / .hev1). The catalog rendition is published immediately so
 // subscribers can discover it before the first frame exists.
-func (b *BroadcastProducer) PublishVideo(input VideoEncoderInput, output VideoEncoderOutput) (*VideoProducer, error) {
-	inner, err := b.inner.PublishVideo(input, output)
+//
+// Pass bandwidth to reserve this track's configured bitrate and follow the grant.
+func (b *BroadcastProducer) EncodeVideo(input VideoEncoderInput, output VideoEncoderOutput, bandwidth *Bandwidth) (*VideoProducer, error) {
+	var innerBw **ffi.MoqBandwidth
+	if bandwidth != nil {
+		innerBw = &bandwidth.inner
+	}
+	inner, err := b.inner.EncodeVideo(input, output, innerBw)
 	if err != nil {
 		return nil, err
 	}
@@ -183,7 +257,7 @@ type BroadcastDynamic struct {
 
 // RequestedTrack waits for the next subscriber-requested track.
 func (d *BroadcastDynamic) RequestedTrack(ctx context.Context) (*TrackRequest, error) {
-	inner, err := runCancellable(ctx, d.inner.Cancel, d.inner.RequestedTrack)
+	inner, err := runHandle(ctx, d.inner.Cancel, d.inner.RequestedTrack)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +293,7 @@ func (r *TrackRequest) Dynamic() (*TrackDynamic, error) {
 	return &TrackDynamic{inner: inner}, nil
 }
 
-// Accept accepts the request as a raw track. For media, use PublishMediaOnTrack.
+// Accept accepts the request as a raw track. For media, use PublishAudioOnTrack or PublishVideoOnTrack.
 func (r *TrackRequest) Accept(info *TrackInfo) (*TrackProducer, error) {
 	inner, err := r.inner.Accept(info)
 	if err != nil {
@@ -243,17 +317,23 @@ func (m *MediaProducer) Name() (string, error) {
 	return m.inner.Name()
 }
 
-// Used blocks until the track has at least one active subscriber. There is no
-// underlying cancel, so a cancelled ctx returns ctx.Err() while the wait
-// unwinds when the track is finished or dropped.
-func (m *MediaProducer) Used(ctx context.Context) error {
-	return runErr(ctx, nil, m.inner.Used)
+// Demand returns a watch-only handle to whether the track has subscribers.
+func (m *MediaProducer) Demand() (*TrackDemand, error) {
+	inner, err := m.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
 }
 
-// Unused blocks until the track has no active subscribers. See Used regarding
-// cancellation.
+// Used blocks until the track has at least one active subscriber. Prefer Demand.
+func (m *MediaProducer) Used(ctx context.Context) error {
+	return m.inner.Used(ctx)
+}
+
+// Unused blocks until the track has no active subscribers. Prefer Demand.
 func (m *MediaProducer) Unused(ctx context.Context) error {
-	return runErr(ctx, nil, m.inner.Unused)
+	return m.inner.Unused(ctx)
 }
 
 // WriteFrame appends frame to the media track. The importer derives keyframe status from
@@ -262,9 +342,74 @@ func (m *MediaProducer) WriteFrame(frame Frame) error {
 	return m.inner.WriteFrame(frame)
 }
 
+// Cut draws a group boundary here.
+//
+// Audio has no boundary of its own (every packet is independently decodable), so this is
+// the only thing that gives it groups: call it after every frame for one group (one QUIC
+// stream) the relay forwards without waiting, or at a segment cadence to align with video.
+// Video groups at its own keyframes and needs this only to override that.
+//
+// On a container this declares a new segment, rolling a group on every track it publishes.
+func (m *MediaProducer) Cut() error {
+	return m.inner.Cut()
+}
+
+// Seek draws a group boundary and numbers the next group sequence.
+//
+// Cut with an explicit sequence, for a publisher whose group numbers have to be
+// deterministic: two encoders aligning per GOP so a consumer can fail over between them.
+func (m *MediaProducer) Seek(sequence uint64) error {
+	return m.inner.Seek(sequence)
+}
+
 // Finish closes the media track.
 func (m *MediaProducer) Finish() error {
 	return m.inner.Finish()
+}
+
+// ContainerProducer publishes a container, which demuxes and publishes its own
+// tracks. Unlike MediaProducer there is no per-frame timestamp: a container
+// carries its tracks' timing itself.
+type ContainerProducer struct {
+	inner *ffi.MoqContainerProducer
+}
+
+// Write pushes a whole chunk of container bytes.
+func (c *ContainerProducer) Write(payload []byte) error {
+	return c.inner.Write(payload)
+}
+
+// Cut declares that the next chunk starts a new segment, rolling a group on
+// every track. An fMP4 source carrying styp atoms declares its own, so this is
+// only needed when it doesn't; MKV, TS, and FLV ignore it.
+func (c *ContainerProducer) Cut() error {
+	return c.inner.Cut()
+}
+
+// Seek starts a new segment and numbers its groups sequence.
+func (c *ContainerProducer) Seek(sequence uint64) error {
+	return c.inner.Seek(sequence)
+}
+
+// Finish finishes every track this container publishes.
+func (c *ContainerProducer) Finish() error {
+	return c.inner.Finish()
+}
+
+// ContainerStreamProducer publishes a container fed by a raw byte stream, which
+// recovers its own framing.
+type ContainerStreamProducer struct {
+	inner *ffi.MoqContainerStreamProducer
+}
+
+// Write pushes raw container bytes; chunk boundaries don't matter.
+func (c *ContainerStreamProducer) Write(payload []byte) error {
+	return c.inner.Write(payload)
+}
+
+// Finish finishes every track this container publishes.
+func (c *ContainerStreamProducer) Finish() error {
+	return c.inner.Finish()
 }
 
 // MediaStreamProducer feeds a raw encoder byte stream; whole frames are emitted
@@ -283,6 +428,35 @@ func (m *MediaStreamProducer) Finish() error {
 	return m.inner.Finish()
 }
 
+// TrackDemand watches whether a published track has subscribers.
+//
+// It is weak: holding it neither keeps the track open nor locks the producer, so
+// a wait can park here while the producer keeps publishing. Waits return
+// ErrClosed once the track is released.
+type TrackDemand struct {
+	inner *ffi.MoqTrackDemand
+}
+
+// Name is the name of the track this watches.
+func (d *TrackDemand) Name() string {
+	return d.inner.Name()
+}
+
+// IsUsed reports whether the track has at least one active subscriber right now.
+func (d *TrackDemand) IsUsed() bool {
+	return d.inner.IsUsed()
+}
+
+// Used blocks until the track has at least one active subscriber.
+func (d *TrackDemand) Used(ctx context.Context) error {
+	return d.inner.Used(ctx)
+}
+
+// Unused blocks until the track has no active subscribers.
+func (d *TrackDemand) Unused(ctx context.Context) error {
+	return d.inner.Unused(ctx)
+}
+
 // TrackProducer writes arbitrary byte payloads with no codec required.
 type TrackProducer struct {
 	inner *ffi.MoqTrackProducer
@@ -293,16 +467,23 @@ func (t *TrackProducer) Name() (string, error) {
 	return t.inner.Name()
 }
 
-// Used blocks until the track has at least one active subscriber. See
-// MediaProducer.Used regarding cancellation.
-func (t *TrackProducer) Used(ctx context.Context) error {
-	return runErr(ctx, nil, t.inner.Used)
+// Demand returns a watch-only handle to whether the track has subscribers.
+func (t *TrackProducer) Demand() (*TrackDemand, error) {
+	inner, err := t.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
 }
 
-// Unused blocks until the track has no active subscribers. See
-// MediaProducer.Used regarding cancellation.
+// Used blocks until the track has at least one active subscriber. Prefer Demand.
+func (t *TrackProducer) Used(ctx context.Context) error {
+	return t.inner.Used(ctx)
+}
+
+// Unused blocks until the track has no active subscribers. Prefer Demand.
 func (t *TrackProducer) Unused(ctx context.Context) error {
-	return runErr(ctx, nil, t.inner.Unused)
+	return t.inner.Unused(ctx)
 }
 
 // Dynamic serves fetches for groups that are not currently cached.
@@ -349,7 +530,7 @@ func (t *TrackProducer) Abort(errorCode uint16) error {
 }
 
 // Consume reads directly from this producer's track. subscription tunes delivery
-// (delivery priority, group ordering priority, group range); pass nil for defaults.
+// (delivery priority, group range); pass nil for defaults.
 func (t *TrackProducer) Consume(subscription *Subscription) (*TrackConsumer, error) {
 	inner, err := t.inner.Consume(subscription)
 	if err != nil {
@@ -358,7 +539,7 @@ func (t *TrackProducer) Consume(subscription *Subscription) (*TrackConsumer, err
 	return &TrackConsumer{inner: inner}, nil
 }
 
-// Finish closes the track.
+// Finish ends the track at the live edge. The handle remains so Abort can still run.
 func (t *TrackProducer) Finish() error {
 	return t.inner.Finish()
 }
@@ -393,7 +574,7 @@ func (g *GroupProducer) WriteFrame(frame Frame) error {
 	return g.inner.WriteFrame(frame)
 }
 
-// Finish closes the group.
+// Finish marks the group complete. The handle remains so Abort can still run.
 func (g *GroupProducer) Finish() error {
 	return g.inner.Finish()
 }
@@ -410,7 +591,7 @@ type TrackDynamic struct {
 
 // RequestedGroup waits for the next uncached group request.
 func (d *TrackDynamic) RequestedGroup(ctx context.Context) (*GroupRequest, error) {
-	inner, err := runCancellable(ctx, d.inner.Cancel, d.inner.RequestedGroup)
+	inner, err := runHandle(ctx, d.inner.Cancel, d.inner.RequestedGroup)
 	if err != nil {
 		return nil, err
 	}
@@ -466,16 +647,23 @@ func (a *AudioProducer) Name() (string, error) {
 	return a.inner.Name()
 }
 
-// Used blocks until the audio track has at least one active subscriber. See
-// MediaProducer.Used regarding cancellation.
-func (a *AudioProducer) Used(ctx context.Context) error {
-	return runErr(ctx, nil, a.inner.Used)
+// Demand returns a watch-only handle to whether the audio track has subscribers.
+func (a *AudioProducer) Demand() (*TrackDemand, error) {
+	inner, err := a.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
 }
 
-// Unused blocks until the audio track has no active subscribers. See
-// MediaProducer.Used regarding cancellation.
+// Used blocks until the audio track has at least one active subscriber. Prefer Demand.
+func (a *AudioProducer) Used(ctx context.Context) error {
+	return a.inner.Used(ctx)
+}
+
+// Unused blocks until the audio track has no active subscribers. Prefer Demand.
 func (a *AudioProducer) Unused(ctx context.Context) error {
-	return runErr(ctx, nil, a.inner.Unused)
+	return a.inner.Unused(ctx)
 }
 
 // ResetEpoch re-anchors the timeline to the next frame after an idle gap.
@@ -486,6 +674,16 @@ func (a *AudioProducer) ResetEpoch() error {
 // Write pushes one frame of PCM in the configured input format.
 func (a *AudioProducer) Write(frame AudioFrame) error {
 	return a.inner.Write(frame)
+}
+
+// Reservation returns this encoder's bandwidth reservation, or nil if it was
+// published without an allocator.
+func (a *AudioProducer) Reservation() *Reservation {
+	inner := a.inner.Reservation()
+	if inner == nil || *inner == nil {
+		return nil
+	}
+	return &Reservation{inner: *inner}
 }
 
 // Finish flushes pending samples and finalizes the track.
@@ -504,16 +702,23 @@ func (v *VideoProducer) Name() (string, error) {
 	return v.inner.Name()
 }
 
-// Used blocks until the video track has at least one active subscriber. See
-// MediaProducer.Used regarding cancellation.
-func (v *VideoProducer) Used(ctx context.Context) error {
-	return runErr(ctx, nil, v.inner.Used)
+// Demand returns a watch-only handle to whether the video track has subscribers.
+func (v *VideoProducer) Demand() (*TrackDemand, error) {
+	inner, err := v.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
 }
 
-// Unused blocks until the video track has no active subscribers. See
-// MediaProducer.Used regarding cancellation.
+// Used blocks until the video track has at least one active subscriber. Prefer Demand.
+func (v *VideoProducer) Used(ctx context.Context) error {
+	return v.inner.Used(ctx)
+}
+
+// Unused blocks until the video track has no active subscribers. Prefer Demand.
 func (v *VideoProducer) Unused(ctx context.Context) error {
-	return runErr(ctx, nil, v.inner.Unused)
+	return v.inner.Unused(ctx)
 }
 
 // Write encodes and publishes one frame in the configured input format. A
@@ -528,7 +733,8 @@ func (v *VideoProducer) Write(frame VideoFrame) error {
 // Optional: the encoder keyframes every Gop frames on its own, and each of
 // those cuts a group, so a subscriber can always join without this. Reach for it
 // only to place the boundaries yourself, aligning groups with something the
-// encoder can't see such as a scene change.
+// encoder can't see such as a scene change. An error means the selected encoder
+// cannot force a keyframe; nothing is queued and groups keep their interval.
 func (v *VideoProducer) Cut() error {
 	return v.inner.Cut()
 }
@@ -539,6 +745,16 @@ func (v *VideoProducer) Cut() error {
 // current rate.
 func (v *VideoProducer) SetBitrate(bitrate uint64) error {
 	return v.inner.SetBitrate(bitrate)
+}
+
+// Reservation returns this encoder's bandwidth reservation, or nil if it was
+// published without an allocator.
+func (v *VideoProducer) Reservation() *Reservation {
+	inner := v.inner.Reservation()
+	if inner == nil || *inner == nil {
+		return nil
+	}
+	return &Reservation{inner: *inner}
 }
 
 // Finish flushes any frames the codec is holding and finalizes the track.

@@ -5,21 +5,23 @@ import (
 	"iter"
 	"sync"
 
-	ffi "github.com/moq-dev/moq-go-ffi/moq"
+	ffi "moq.dev/moq-ffi/moq"
 )
 
-// Transport is the wire transport an incoming session arrived over.
-type Transport string
+// Transport is the network transport carrying an incoming session.
+type Transport = ffi.MoqTransport
 
-// Known transports reported by Request.Transport. Future native versions may
-// report values not listed here, so treat Transport as an open set.
 const (
 	// TransportQUIC is a session that arrived over native QUIC.
-	TransportQUIC Transport = "quic"
+	TransportQUIC = ffi.MoqTransportQuic
 	// TransportIroh is a session that arrived over an Iroh peer-to-peer connection.
-	TransportIroh Transport = "iroh"
+	TransportIroh = ffi.MoqTransportIroh
 	// TransportWebSocket is a session that arrived over the WebSocket fallback transport.
-	TransportWebSocket Transport = "websocket"
+	TransportWebSocket = ffi.MoqTransportWebSocket
+	// TransportTCP is a session that arrived over a plaintext TCP connection.
+	TransportTCP = ffi.MoqTransportTcp
+	// TransportUnix is a session that arrived over a Unix domain socket.
+	TransportUnix = ffi.MoqTransportUnix
 )
 
 // Request is an incoming session that can be accepted (Accept) or rejected (Reject).
@@ -45,43 +47,41 @@ func (r *Request) Query() *string {
 
 // Transport is the wire transport the request arrived over, e.g. TransportQUIC.
 func (r *Request) Transport() Transport {
-	return Transport(r.inner.Transport())
+	return r.inner.Transport()
 }
 
 // SetPublish overrides the publish origin for this session. Pass nil to fall
-// back to the server's configured publish origin.
-func (r *Request) SetPublish(o *OriginProducer) {
+// back to the server's configured publish origin. Captured at Accept.
+func (r *Request) SetPublish(o *OriginProducer) error {
 	if o == nil {
-		r.inner.SetPublish(nil)
-		return
+		return r.inner.SetPublish(nil)
 	}
-	r.inner.SetPublish(&o.inner)
+	return r.inner.SetPublish(&o.inner)
 }
 
 // SetConsume overrides the consume origin for this session. Pass nil to fall
-// back to the server's configured consume origin.
-func (r *Request) SetConsume(o *OriginProducer) {
+// back to the server's configured consume origin. Captured at Accept.
+func (r *Request) SetConsume(o *OriginProducer) error {
 	if o == nil {
-		r.inner.SetConsume(nil)
-		return
+		return r.inner.SetConsume(nil)
 	}
-	r.inner.SetConsume(&o.inner)
+	return r.inner.SetConsume(&o.inner)
 }
 
 // Accept completes the handshake and returns the established session. Hold the
 // session to keep the connection alive.
 func (r *Request) Accept(ctx context.Context) (*Session, error) {
-	inner, err := runCancellable(ctx, r.inner.Cancel, r.inner.Accept)
+	inner, err := runHandle(ctx, r.inner.Cancel, r.inner.Accept)
 	if err != nil {
 		return nil, err
 	}
 	return &Session{inner: inner}, nil
 }
 
-// Reject refuses the session with an HTTP status code (default convention: 404).
+// Reject refuses the session with an application error code; 401 and 403 map to unauthorized.
 func (r *Request) Reject(ctx context.Context, code uint16) error {
-	return runErr(ctx, r.inner.Cancel, func() error {
-		return r.inner.Reject(code)
+	return runErr(ctx, r.inner.Cancel, func(ctx context.Context) error {
+		return r.inner.Reject(ctx, code)
 	})
 }
 
@@ -156,24 +156,25 @@ func Listen(ctx context.Context, bind string, opts ...ServerOption) (*Server, er
 	}
 
 	inner := ffi.NewMoqServer()
-	if err := inner.SetBind(bind); err != nil {
+	err := inner.SetBind(bind)
+	if err == nil && len(cfg.tlsCert) > 0 {
+		err = inner.SetTlsCert(cfg.tlsCert)
+	}
+	if err == nil && len(cfg.tlsKey) > 0 {
+		err = inner.SetTlsKey(cfg.tlsKey)
+	}
+	if err == nil && len(cfg.tlsGenerate) > 0 {
+		err = inner.SetTlsGenerate(cfg.tlsGenerate)
+	}
+	if err == nil && s.publishOrigin != nil {
+		err = inner.SetPublish(&s.publishOrigin.inner)
+	}
+	if err == nil && s.consumeOrigin != nil {
+		err = inner.SetConsume(&s.consumeOrigin.inner)
+	}
+	if err != nil {
 		inner.Cancel()
 		return nil, err
-	}
-	if len(cfg.tlsCert) > 0 {
-		inner.SetTlsCert(cfg.tlsCert)
-	}
-	if len(cfg.tlsKey) > 0 {
-		inner.SetTlsKey(cfg.tlsKey)
-	}
-	if len(cfg.tlsGenerate) > 0 {
-		inner.SetTlsGenerate(cfg.tlsGenerate)
-	}
-	if s.publishOrigin != nil {
-		inner.SetPublish(&s.publishOrigin.inner)
-	}
-	if s.consumeOrigin != nil {
-		inner.SetConsume(&s.consumeOrigin.inner)
 	}
 	s.inner = inner
 
@@ -198,7 +199,7 @@ func (s *Server) CertFingerprints() ([]string, error) {
 	return s.inner.CertFingerprints()
 }
 
-// CreateBroadcast creates a live broadcast at path, served to incoming sessions.
+// CreateBroadcast creates a locally announced broadcast at path. Advertise it to peers after populating tracks.
 //
 // See [OriginProducer.CreateBroadcast].
 func (s *Server) CreateBroadcast(path string) (*BroadcastProducer, error) {
@@ -210,18 +211,12 @@ func (s *Server) CreateBroadcast(path string) (*BroadcastProducer, error) {
 
 // Accept returns the next incoming request, or (nil, nil) when the server stops.
 //
-// The ffi listener has no per-accept cancellation (its only cancel is the
-// server-wide one Close uses). Canceling ctx therefore makes Accept return
-// ctx.Err() while the underlying accept keeps running in the background until a
-// connection arrives or Close stops the server. Use Close to tear the listener
-// down; don't rely on a per-call ctx to do it. Serve handles this for you.
+// Cancelling ctx aborts this accept alone and leaves the server listening; use
+// Close to tear the listener down.
 func (s *Server) Accept(ctx context.Context) (*Request, error) {
-	res, err := runCancellable(ctx, nil, s.inner.Accept)
-	if err != nil {
+	res, err := s.inner.Accept(ctx)
+	if err != nil || res == nil {
 		return nil, err
-	}
-	if res == nil {
-		return nil, nil
 	}
 	return &Request{inner: *res}, nil
 }
@@ -271,8 +266,8 @@ func (s *Server) Serve(ctx context.Context) error {
 	for {
 		req, err := s.Accept(ctx)
 		if err != nil {
-			// ctx-driven shutdown: Close stops the listener and unblocks the
-			// background accept (which has no per-call cancel of its own).
+			// ctx-driven shutdown: the accept is already aborted, so this is what
+			// stops the listener itself.
 			if ctx.Err() != nil {
 				_ = s.Close()
 			}
@@ -296,9 +291,11 @@ func (s *Server) Serve(ctx context.Context) error {
 	}
 }
 
-// Close stops accepting new sessions. In-flight sessions stay alive until their
-// handles are dropped or cancelled. Safe to call more than once and from
-// multiple goroutines (Serve calls it on ctx-driven shutdown).
+// Close stops accepting new sessions and releases the listening socket before
+// it returns, so the same address can be bound again immediately. In-flight
+// sessions stay alive until their handles are dropped or cancelled. Safe to call
+// more than once and from multiple goroutines (Serve calls it on ctx-driven
+// shutdown).
 func (s *Server) Close() error {
 	s.closeOnce.Do(func() {
 		if s.inner != nil {

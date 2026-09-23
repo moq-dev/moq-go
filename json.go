@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"iter"
 
-	ffi "github.com/moq-dev/moq-go-ffi/moq"
+	ffi "moq.dev/moq-ffi/moq"
 )
 
 // DefaultDeltaRatio is used when [JSONSnapshotOptions.DeltaRatio] is nil. Go has no field
@@ -59,6 +59,15 @@ func (p *JSONSnapshotProducer) Update(value any) error {
 	return p.inner.Update(string(encoded))
 }
 
+// Demand returns a watch-only handle to whether the track has subscribers.
+func (p *JSONSnapshotProducer) Demand() (*TrackDemand, error) {
+	inner, err := p.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
+}
+
 // Finish closes the snapshot track.
 func (p *JSONSnapshotProducer) Finish() error {
 	return p.inner.Finish()
@@ -76,6 +85,15 @@ func (p *JSONStreamProducer) Append(value any) error {
 		return err
 	}
 	return p.inner.Append(string(encoded))
+}
+
+// Demand returns a watch-only handle to whether the track has subscribers.
+func (p *JSONStreamProducer) Demand() (*TrackDemand, error) {
+	inner, err := p.inner.Demand()
+	if err != nil {
+		return nil, err
+	}
+	return &TrackDemand{inner: inner}, nil
 }
 
 // Finish closes the stream track.
@@ -159,10 +177,11 @@ func (b *BroadcastProducer) PublishJSONStream(name string, options JSONStreamOpt
 
 // SubscribeJSONSnapshot subscribes to a lossy latest-value JSON track.
 func (b *BroadcastConsumer) SubscribeJSONSnapshot(
+	ctx context.Context,
 	name string,
 	options JSONSubscribeOptions,
 ) (*JSONSnapshotConsumer, error) {
-	inner, err := b.inner.SubscribeJsonSnapshot(name, ffi.MoqJsonSnapshotConfig{
+	inner, err := b.inner.SubscribeJsonSnapshot(ctx, name, ffi.MoqJsonSnapshotConfig{
 		DeltaRatio:  0,
 		Compression: options.Compression,
 	})
@@ -174,10 +193,11 @@ func (b *BroadcastConsumer) SubscribeJSONSnapshot(
 
 // SubscribeJSONStream subscribes to a lossless append-log JSON track.
 func (b *BroadcastConsumer) SubscribeJSONStream(
+	ctx context.Context,
 	name string,
 	options JSONSubscribeOptions,
 ) (*JSONStreamConsumer, error) {
-	inner, err := b.inner.SubscribeJsonStream(name, ffi.MoqJsonStreamConfig{Compression: options.Compression})
+	inner, err := b.inner.SubscribeJsonStream(ctx, name, ffi.MoqJsonStreamConfig{Compression: options.Compression})
 	if err != nil {
 		return nil, err
 	}

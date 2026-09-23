@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/moq-dev/moq-go/moq"
+	"moq.dev/moq"
 )
 
 // Subscribe to a broadcast and print its catalog. These examples have no Output
@@ -19,7 +19,7 @@ func ExampleClient_Announced() {
 	}
 	defer client.Close()
 
-	announced, err := client.Announced("demos/")
+	announced, err := client.Announced(moq.AnnounceOptions{Prefix: "demos/"})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +32,10 @@ func ExampleClient_Announced() {
 			}
 			log.Fatal(err)
 		}
-		fmt.Println("broadcast:", ann.Path())
+		if !ann.Active() {
+			continue
+		}
+		fmt.Println("broadcast:", ann.Prefix())
 	}
 }
 
@@ -53,10 +56,11 @@ func ExampleClient_CreateBroadcast() {
 	// Finishing unpublishes the broadcast immediately.
 	defer broadcast.Finish()
 
-	media, err := broadcast.PublishMedia("opus", opusHead())
+	media, err := broadcast.PublishAudio(moq.AudioFormatOpus, opusHead())
 	if err != nil {
 		log.Fatal(err)
 	}
+	_ = broadcast.Announce(moq.Route{})
 
 	if err := media.WriteFrame(moq.Frame{Payload: []byte("opus frame")}); err != nil {
 		log.Fatal(err)
@@ -82,14 +86,14 @@ func ExampleClient_Session_stats() {
 }
 
 // Publish a video track with catalog hints known before the first keyframe.
-func ExampleBroadcastProducer_PublishMedia_videoHint() {
+func ExampleBroadcastProducer_PublishVideo_videoHint() {
 	broadcast, err := moq.NewBroadcastProducer()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer broadcast.Finish()
 
-	media, err := broadcast.PublishMedia("avc3", nil, moq.WithVideoHint(moq.VideoHint{}))
+	media, err := broadcast.PublishVideo(moq.VideoFormatAvc3, nil, moq.WithVideoHint(moq.VideoHint{}))
 	if err != nil {
 		log.Fatal(err)
 	}
